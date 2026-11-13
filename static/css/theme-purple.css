@@ -685,3 +685,11 @@ html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; heig
 }
 .product-grid, .ah-products, .shop-products, .agent-hub-grid { grid-auto-rows: 1fr; }
 .test-mode-note { text-align: left; line-height: 1.6; border-left: 4px solid var(--gold) !important; background: #fff8ec !important; color: #5c4317 !important; }
+
+/* v20: chat product cards — colour swatches, sizes, full names */
+.aarohi-ai-card { flex-basis: 168px !important; }
+.aarohi-ai-card-name { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; }
+.aarohi-ai-card-meta { display: grid; gap: 4px; margin: 2px 0 4px; }
+.aarohi-ai-swatches { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.aarohi-ai-swatch { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid #fff; box-shadow: 0 0 0 1px var(--p-300); flex: 0 0 14px; }
+.aarohi-ai-swatches small, .aarohi-ai-sizes { font-size: 12px !important; color: var(--muted); line-height: 1.3; margin-left: 2px; }

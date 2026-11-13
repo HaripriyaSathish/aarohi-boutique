@@ -57,6 +57,25 @@
         return html;
     }
 
+    // Fabric colour names -> swatch colours (unknown names fall back to CSS, then grey)
+    const SWATCHES = {
+        lavender: '#b9a2db', lilac: '#c8a2c8', purple: '#7b4fa3', violet: '#7f52a8', mauve: '#b784a7',
+        plum: '#6b3a63', wine: '#722f37', ivory: '#fffff0', cream: '#f8efd8', white: '#ffffff',
+        rose: '#e8a0b4', pink: '#f4a7c0', peach: '#ffcba4', blush: '#f2c4c4', coral: '#f08070',
+        red: '#c0392b', maroon: '#7b1e2b', burgundy: '#800020', sage: '#9cae8f', green: '#4f8a5b',
+        olive: '#808044', mint: '#a8dcc0', blue: '#3b6ea8', navy: '#1f2e5a', indigo: '#3f4c9a',
+        teal: '#2a8c8c', yellow: '#f2c94c', mustard: '#d4a12a', gold: '#c8a165', black: '#222222',
+        grey: '#9a9a9a', gray: '#9a9a9a', beige: '#e3d3b6', sand: '#d8c3a0', brown: '#8b5e3c',
+        'as pictured': 'linear-gradient(135deg,#e8a0b4,#c8a165)'
+    };
+    function swatchColour(name) {
+        const key = name.toLowerCase();
+        if (SWATCHES[key]) return SWATCHES[key];
+        const word = Object.keys(SWATCHES).find(k => key.includes(k));
+        if (word) return SWATCHES[word];
+        return CSS.supports('color', key) ? key : '#cfc6d8';
+    }
+
     function bubble(text, user = false) {
         const element = document.createElement('div');
         element.className = user ? 'aarohi-ai-bubble user' : 'aarohi-ai-bubble';
@@ -169,6 +188,37 @@
                     name.textContent = product.name;
                     const price = document.createElement('strong');
                     price.textContent = '₹' + product.price_inr;
+                    // Colour swatches + sizes from in-stock variants
+                    const inStock = (product.variants || []).filter(v => v.stock > 0);
+                    const colours = [...new Set(inStock.map(v => String(v.colour).trim()).filter(Boolean)
+                        .map(c => c.charAt(0).toUpperCase() + c.slice(1).toLowerCase()))];
+                    const ORDER = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', '3XL', '4XL'];
+                    const rank = s => { const i = ORDER.indexOf(s.toUpperCase()); return i < 0 ? 99 : i; };
+                    const sizes = [...new Set(inStock.map(v => String(v.size).trim()).filter(Boolean))]
+                        .sort((a, b) => rank(a) - rank(b) || a.localeCompare(b, undefined, { numeric: true }));
+                    const meta = document.createElement('div');
+                    meta.className = 'aarohi-ai-card-meta';
+                    if (colours.length) {
+                        const row = document.createElement('div');
+                        row.className = 'aarohi-ai-swatches';
+                        for (const colour of colours.slice(0, 5)) {
+                            const dot = document.createElement('span');
+                            dot.className = 'aarohi-ai-swatch';
+                            dot.title = colour;
+                            dot.style.background = swatchColour(colour);
+                            row.append(dot);
+                        }
+                        const label = document.createElement('small');
+                        label.textContent = colours.slice(0, 3).join(' · ') + (colours.length > 3 ? ' +' + (colours.length - 3) : '');
+                        row.append(label);
+                        meta.append(row);
+                    }
+                    if (sizes.length) {
+                        const sizeLine = document.createElement('small');
+                        sizeLine.className = 'aarohi-ai-sizes';
+                        sizeLine.textContent = 'Sizes: ' + (sizes.length > 4 ? sizes[0] + '–' + sizes[sizes.length - 1] : sizes.join(', '));
+                        meta.append(sizeLine);
+                    }
                     const add = document.createElement('button');
                     add.type = 'button';
                     add.className = 'aarohi-ai-card-add';
@@ -179,7 +229,7 @@
                         if (cart) cart.checked = true;
                         form.requestSubmit();
                     });
-                    card.append(photo, name, price, add);
+                    card.append(photo, name, price, meta, add);
                     rail.append(card);
                 }
                 append(rail);

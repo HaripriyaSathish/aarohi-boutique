@@ -49,3 +49,32 @@ class AgentCardTests(TestCase):
         self.assertIn("Reply ONLY in clear, simple English", prompt)
         _, prompt = self.chat("Vanakkam", language="tanglish")
         self.assertIn("Tanglish", prompt)
+
+
+class SmartSearchTests(TestCase):
+    def setUp(self):
+        cat = Category.objects.create(name="Kurtas & Kurta Sets", slug="kurtas")
+        other = Category.objects.create(name="Sarees", slug="sarees")
+        self.lav = Product.objects.create(category=cat, name="Lavender Embroidered Kurta Set", slug="lav", price=2499)
+        self.purple = Product.objects.create(category=cat, name="Elegant Kurta set", slug="elegant", price=1499,
+                                             description="Elegant daily wear kurta set")
+        self.saree = Product.objects.create(category=other, name="Rose Silk Saree", slug="rose", price=3499)
+        Variant.objects.create(product=self.lav, size="M", colour="Lavender", sku="L1", stock=5)
+        self.purple_variant = Variant.objects.create(product=self.purple, size="L", colour="Purple", sku="P1", stock=4)
+        Variant.objects.create(product=self.saree, size="Free", colour="Rose", sku="S1", stock=3)
+
+    def names(self, query):
+        from .agents import search_products
+        return [p["name"] for p in search_products(query)["products"]]
+
+    def test_colour_family_finds_purple_kurta_for_lavender(self):
+        names = self.names("show me a lavender kurta")
+        self.assertIn("Elegant Kurta set", names)
+        self.assertIn("Lavender Embroidered Kurta Set", names)
+        self.assertNotIn("Rose Silk Saree", names)
+        self.assertEqual(names[0], "Lavender Embroidered Kurta Set")  # name + colour match ranks first
+
+    def test_out_of_stock_products_are_hidden(self):
+        self.purple_variant.stock = 0
+        self.purple_variant.save()
+        self.assertNotIn("Elegant Kurta set", self.names("lavender kurta"))

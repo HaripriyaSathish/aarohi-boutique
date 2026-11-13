@@ -163,6 +163,33 @@ def serialize_order(order):
     }
 
 
+# Shoppers use many words for one colour; search the whole family.
+COLOUR_FAMILIES = [
+    {"lavender", "purple", "lilac", "violet", "mauve", "plum", "orchid", "wine"},
+    {"pink", "rose", "blush", "peach", "coral", "salmon", "dusty"},
+    {"red", "maroon", "burgundy", "crimson", "ruby"},
+    {"white", "ivory", "cream", "offwhite", "pearl"},
+    {"blue", "navy", "indigo", "teal", "sky", "turquoise"},
+    {"green", "sage", "olive", "mint", "emerald", "bottle"},
+    {"yellow", "mustard", "gold", "golden", "lemon"},
+    {"black", "charcoal", "grey", "gray"},
+    {"beige", "sand", "nude", "brown", "tan", "camel"},
+]
+STOP_WORDS = {"show", "me", "a", "an", "the", "some", "for", "i", "want", "need", "please", "find", "any", "with", "in", "of", "and", "or", "under", "below", "rs", "inr"}
+
+
+def _expand_words(query):
+    words = [w for w in re.findall(r"[\w]+", str(query).lower()) if w not in STOP_WORDS][:8]
+    expanded = set(words)
+    for word in words:
+        singular = word[:-1] if word.endswith("s") and len(word) > 3 else word
+        expanded.add(singular)
+        for family in COLOUR_FAMILIES:
+            if word in family or singular in family:
+                expanded |= family
+    return words, expanded
+
+
 def search_products(query="", max_price=0, size="", colour=""):
     products = Product.objects.filter(active=True, category__active=True)
     variant_filters = {"variants__stock__gt": 0}
@@ -171,16 +198,18 @@ def search_products(query="", max_price=0, size="", colour=""):
     if colour:
         variant_filters["variants__colour__icontains"] = str(colour)[:50]
     products = products.filter(**variant_filters)
-    words = re.findall(r"[\w]+", str(query).lower())[:8]
+    words, expanded = _expand_words(query)
     # Multiword OR search is deliberate: e.g. "lavender cotton wedding".
-    if words:
+    if expanded:
         expression = Q()
-        for word in words:
+        for word in expanded:
             expression |= (
                 Q(name__icontains=word)
                 | Q(category__name__icontains=word)
                 | Q(fabric__icontains=word)
                 | Q(occasion__icontains=word)
+                | Q(description__icontains=word)
+                | Q(variants__colour__icontains=word, variants__stock__gt=0)
             )
         products = products.filter(expression)
     try:
@@ -191,15 +220,35 @@ def search_products(query="", max_price=0, size="", colour=""):
             products = products.filter(price__lte=maximum)
     except (InvalidOperation, TypeError, ValueError):
         return {"error": "Invalid maximum price."}
-    return {
-        "products": [
-            serialize_product(product)
-            for product in products.select_related("category")
-            .prefetch_related("variants")
-            .order_by("price")
-            .distinct()[:6]
-        ]
-    }
+    candidates = list(
+        products.select_related("category").prefetch_related("variants").distinct()[:60]
+    )
+
+    def score(product):
+        # Rank: every requested word (or its colour family) found in the name,
+        # colours, category or description adds points; ties go to lower price.
+        colours = " ".join(v.colour.lower() for v in product.variants.all() if v.stock > 0)
+        text = {
+            "name": product.name.lower(),
+            "colour": colours,
+            "category": product.category.name.lower(),
+            "other": f"{product.fabric} {product.occasion} {product.description}".lower(),
+        }
+        total = 0
+        for word in words:
+            family = next((f for f in COLOUR_FAMILIES if word in f), {word})
+            if any(w in text["name"] for w in family):
+                total += 3
+            if any(w in text["colour"] for w in family):
+                total += 3
+            if word in text["category"]:
+                total += 2
+            if any(w in text["other"] for w in family):
+                total += 1
+        return (-total, product.price)
+
+    candidates.sort(key=score)
+    return {"products": [serialize_product(product) for product in candidates[:6]]}
 
 
 def has_staff_access(user):
