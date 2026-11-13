@@ -183,7 +183,16 @@ def run_graph(message, agent_id, user, history):
                     ],
                     "tools_used": [],
                 }
-        result = call_tool(name, args)
+        if name == "search_products":
+            # Start from products relevant to what the customer asked for
+            # (e.g. "lavender kurta"); fall back to the general catalogue.
+            args = {**args, "query": message[:120]}
+            result = call_tool(name, args)
+            if not result.get("products"):
+                args = {**args, "query": ""}
+                result = call_tool(name, args)
+        else:
+            result = call_tool(name, args)
         tool_id = "initial-store-context"
         # Background context only: do not turn an unfiltered catalogue listing
         # into product cards (cards come from the model's own tool calls).
@@ -291,7 +300,9 @@ def run_graph(message, agent_id, user, history):
         + " Keep replies short and friendly: 1-2 sentences, then at most 5 bullet lines starting with '- '. "
         "You may use **bold** for product names and prices; no tables or headings. "
         "Do not mention internal variant IDs unless the customer asks. "
-        "When you list products, include only the products relevant to the request. Separate measured facts, estimates and suggestions."
+        "When you list products, include only the products relevant to the request, but show ALL of them (up to 6) - "
+        "never only one when the search returned several matches. Treat close colour shades as matches "
+        "(lavender/purple/lilac, rose/pink, ivory/cream) and mention the actual colour of each. Separate measured facts, estimates and suggestions."
     )
     inputs = [SystemMessage(content=prompt)]
     for item in history[-6:]:
