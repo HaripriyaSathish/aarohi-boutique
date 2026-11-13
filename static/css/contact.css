@@ -1,0 +1,22 @@
+.page-heading h1,
+.narrow h1 {
+    color: var(--purple-dark);
+}
+
+.prose {
+    line-height: 1.9;
+}
+
+.prose h2 {
+    margin-top: 28px;
+}
+
+.narrow .panel {
+    padding: 36px;
+}
+
+@media (max-width: 480px) {
+    .narrow .panel {
+        padding: 22px;
+    }
+}

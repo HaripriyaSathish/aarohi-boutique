@@ -1,0 +1,41 @@
+.checkout-layout form p {
+    margin-bottom: 20px;
+}
+
+.checkout-layout h2 {
+    color: var(--purple-dark);
+}
+
+.checkout-layout>section.panel {
+    padding: 35px;
+    border-top: 3px solid #d3b9e3;
+}
+
+.checkout-layout>section form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 22px;
+}
+
+.checkout-layout>section form>p:nth-of-type(3),
+.checkout-layout>section form>p:nth-of-type(4),
+.checkout-layout>section form>p:last-of-type,
+.checkout-layout>section form>button,
+.checkout-layout>section form>.errorlist {
+    grid-column: 1 / -1;
+}
+
+.checkout-layout>section .muted {
+    font-size: 11px;
+    margin-bottom: 28px;
+}
+
+@media (max-width: 500px) {
+    .checkout-layout>section.panel {
+        padding: 25px 20px;
+    }
+
+    .checkout-layout>section form {
+        grid-template-columns: 1fr;
+    }
+}

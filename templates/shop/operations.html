@@ -1,0 +1,324 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Agent Operations Centre | Aarohi
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/operations.css' %}">
+{% endblock %}
+{% block content %}
+    <section class="container section">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">
+                    ADMIN AUTOMATION CENTRE
+                </span>
+                <h1>
+                    Your agents at work
+                </h1>
+                <p>
+                    Continuous automation uses the background worker. Physical tasks and exceptions stay visible.
+                </p>
+            </div>
+            <form action="{% url 'run_cycle' %}" method="post">
+                {% csrf_token %}
+                <button>
+                    Run one automation cycle
+                </button>
+            </form>
+        </div>
+        <nav class="operations-nav">
+            <a href="{% url 'assistant' %}?agent=admin">
+                Operations agent
+            </a>
+            <a href="{% url 'assistant' %}?agent=inventory">
+                Inventory agent
+            </a>
+            <a href="{% url 'assistant' %}?agent=shipping">
+                Shipping agent
+            </a>
+            <a href="{% url 'assistant' %}?agent=content">
+                Catalogue agent
+            </a>
+            <a href="/admin/">
+                Django admin
+            </a>
+        </nav>
+        <div class="operations-grid">
+            <section>
+                <h2>
+                    Physical work & exceptions
+                </h2>
+                {% for task in tasks %}
+                    <article class="panel task-card">
+                        <span class="badge">
+                            {{ task.kind }}
+                        </span>
+                        <h3>
+                            {{ task.title }}
+                        </h3>
+                        {% if task.kind == 'pack' and task.order %}
+                            <form method="post" action="{% url 'propose_action' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="kind" value="mark_packed">
+                                <input type="hidden" name="target" value="{{ task.order.number }}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button class="secondary">
+                                    Review packing confirmation
+                                </button>
+                            </form>
+                        {% elif task.return_request %}
+                            <p>
+                                Arrange pickup, then receive and inspect the item before using this control.
+                            </p>
+                            <form method="post" action="{% url 'propose_action' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="kind" value="complete_return">
+                                <input type="hidden" name="target" value="{{ task.return_request.pk }}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button class="secondary">
+                                    Review inspection confirmation
+                                </button>
+                            </form>
+                        {% endif %}
+                    </article>
+                {% empty %}
+                    <p>
+                        No open physical tasks.
+                    </p>
+                {% endfor %}
+                <h2>
+                    Return requests awaiting approval
+                </h2>
+                {% for result in pending_returns %}
+                    <form method="post" action="{% url 'propose_action' %}" class="panel">
+                        {% csrf_token %}
+                        <h3>
+                            {{ result.item.name }} · {{ result.item.order.number }}
+                        </h3>
+                        <p>
+                            {{ result.reason }}
+                        </p>
+                        <input type="hidden" name="kind" value="approve_return">
+                        <input type="hidden" name="target" value="{{ result.pk }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button class="secondary">
+                            Review approval
+                        </button>
+                    </form>
+                {% endfor %}
+                <h2>
+                    Restock proposals
+                </h2>
+                {% for plan in plans %}
+                    <form method="post" action="{% url 'propose_action' %}" class="panel">
+                        {% csrf_token %}
+                        <h3>
+                            {{ plan.variant.product.name }}
+                        </h3>
+                        <p>
+                            SKU {{ plan.variant.sku }} · {{ plan.variant.stock }} available · Plan #{{ plan.pk }}
+                        </p>
+                        <input type="hidden" name="kind" value="receive_stock">
+                        <input type="hidden" name="target" value="{{ plan.pk }}">
+                        <label>
+                            Units physically received
+                            <input type="number" name="quantity" min="1" max="10000" value="{{ plan.quantity }}">
+                        </label>
+                        <button class="secondary">
+                            Review stock receipt
+                        </button>
+                    </form>
+                {% empty %}
+                    <p>
+                        No restock proposals.
+                    </p>
+                {% endfor %}
+                <h2>
+                    Jobs needing review
+                </h2>
+                {% for job in review_jobs %}
+                    <form method="post" action="{% url 'propose_action' %}" class="panel">
+                        {% csrf_token %}
+                        <h3>
+                            {{ job.agent }} · {{ job.kind }}
+                        </h3>
+                        <p>
+                            {{ job.error }}
+                        </p>
+                        <input type="hidden" name="kind" value="retry_job">
+                        <input type="hidden" name="target" value="{{ job.pk }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button class="secondary">
+                            Review retry after reconciliation
+                        </button>
+                    </form>
+                {% empty %}
+                    <p>
+                        No exceptions requiring review.
+                    </p>
+                {% endfor %}
+            </section>
+            <aside>
+                <section class="panel">
+                    <h2>
+                        Automation policy
+                    </h2>
+                    {% if can_edit_policy %}
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button>
+                                Save automation policy
+                            </button>
+                        </form>
+                    {% else %}
+                        <p>
+                            Policy changes require store-owner permission.
+                        </p>
+                    {% endif %}
+                    <p class="muted">
+                        Enabling live refunds authorizes the worker to submit eligible real-money refunds under this policy. Demo providers never collect money or book real parcels.
+                    </p>
+                </section>
+                <section class="panel">
+                    <h2>
+                        Pending action approvals
+                    </h2>
+                    {% for action in actions %}
+                        <p>
+                            {{ action.summary|truncatechars:180 }}
+                        </p>
+                        <a class="button secondary" href="{% url 'action_review' action.pk %}">
+                            Review action
+                        </a>
+                    {% empty %}
+                        <p>
+                            No pending proposals.
+                        </p>
+                    {% endfor %}
+                </section>
+            </aside>
+        </div>
+        <h2>
+            Shipment activity
+        </h2>
+        <div class="table-wrap panel">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            Order
+                        </th>
+                        <th>
+                            Provider
+                        </th>
+                        <th>
+                            AWB
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Label
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for shipment in shipments %}
+                        <tr>
+                            <td>
+                                {{ shipment.order.number }}
+                                {% if shipment.return_request %}
+                                    · Exchange
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ shipment.provider }} · {{ shipment.get_direction_display }}
+                            </td>
+                            <td>
+                                {{ shipment.awb }}
+                            </td>
+                            <td>
+                                {{ shipment.state }}
+                            </td>
+                            <td>
+                                {% if shipment.label_url %}
+                                    <a href="{{ shipment.label_url }}" target="_blank" rel="noopener">
+                                        Print label ↗
+                                    </a>
+                                {% else %}
+                                    Not ready / demo
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <h2>
+            Workflow queue
+        </h2>
+        <div class="table-wrap panel">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            Agent
+                        </th>
+                        <th>
+                            Job
+                        </th>
+                        <th>
+                            State
+                        </th>
+                        <th>
+                            Attempts
+                        </th>
+                        <th>
+                            Next eligible run
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in jobs %}
+                        <tr>
+                            <td>
+                                {{ job.agent }}
+                            </td>
+                            <td>
+                                {{ job.kind }}
+                            </td>
+                            <td>
+                                {{ job.state }}
+                            </td>
+                            <td>
+                                {{ job.attempts }}
+                            </td>
+                            <td>
+                                {{ job.available_at|date:'d M, h:i A' }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <h2>
+            Agent audit trail
+        </h2>
+        <section class="panel">
+            {% for entry in audits %}
+                <p>
+                    <small>
+                        {{ entry.created|date:'d M, h:i A' }} · {{ entry.agent }} · {{ entry.event }}
+                    </small>
+                    {{ entry.summary }}
+                </p>
+            {% empty %}
+                <p>
+                    Agent actions and job results will be recorded here.
+                </p>
+            {% endfor %}
+        </section>
+    </section>
+{% endblock %}

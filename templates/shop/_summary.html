@@ -1,0 +1,55 @@
+<aside class="summary panel">
+    <h2>
+        Order summary
+    </h2>
+    {% for line in lines %}
+        <div class="summary-item">
+            <span>
+                {{ line.variant.product.name }} × {{ line.quantity }}
+                <small>
+                    {{ line.variant.size }} · {{ line.variant.colour }}
+                </small>
+            </span>
+            <strong>
+                ₹{{ line.total }}
+            </strong>
+        </div>
+    {% endfor %}
+    <div class="summary-item">
+        <span>
+            Subtotal
+        </span>
+        <span>
+            ₹{{ subtotal }}
+        </span>
+    </div>
+    <div class="summary-item">
+        <span>
+            Discount
+        </span>
+        <span>
+            −₹{{ discount }}
+        </span>
+    </div>
+    <div class="summary-item">
+        <span>
+            Shipping
+        </span>
+        <span>
+            ₹{{ shipping }}
+        </span>
+    </div>
+    <div class="summary-item total">
+        <span>
+            Total payable
+        </span>
+        <strong>
+            ₹{{ total }}
+        </strong>
+    </div>
+    {% block summary_button %}
+    {% endblock %}
+    <p class="muted">
+        Prices include applicable taxes. Shipping is calculated before payment.
+    </p>
+</aside>

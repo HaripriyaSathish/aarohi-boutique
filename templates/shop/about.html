@@ -1,0 +1,29 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    About | Aarohi Boutique
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock %}
+{% block content %}
+    <section class="container section narrow">
+        <span class="eyebrow">
+            AAROHI BOUTIQUE
+        </span>
+        <h1>
+            Our story
+        </h1>
+        <article class="panel prose">
+            <h2>
+                A little elegance for every day
+            </h2>
+            <p>
+                Aarohi Boutique brings together thoughtfully chosen women’s styles, from everyday cottons to celebration-ready details. Discover sarees, kurta sets, suits, dresses and more, curated to make getting dressed feel special.
+            </p>
+            <p>
+                Our team can help with sizing, fabric and styling. Get in touch before placing an order if you need exact garment measurements.
+            </p>
+        </article>
+    </section>
+{% endblock %}

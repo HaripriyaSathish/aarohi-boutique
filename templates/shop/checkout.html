@@ -1,0 +1,46 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Checkout | Aarohi Boutique
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="container contextual-agent">
+        <a href="{% url 'assistant' %}?agent=cart">
+            ✧ Need help before checkout? →
+        </a>
+    </div>
+    <div class="container section">
+        <div class="page-heading">
+            <span class="eyebrow">
+                BAG → CHECKOUT → PAYMENT
+            </span>
+            <h1>
+                One step closer to yours
+            </h1>
+        </div>
+        <div class="checkout-layout">
+            <section class="panel">
+                <h2>
+                    Contact & delivery details
+                </h2>
+                <p class="muted">
+                    Shipping within India. Please check your PIN and phone number carefully.
+                </p>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="full-width">
+                        Create order & continue to payment →
+                    </button>
+                </form>
+                <a class="clear-link" href="{% url 'addresses' %}">
+                    Manage saved addresses
+                </a>
+            </section>
+            {% include "shop/_summary.html" %}
+        </div>
+    </div>
+{% endblock %}

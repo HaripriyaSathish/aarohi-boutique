@@ -1,0 +1,138 @@
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin: 20px 0 40px;
+}
+
+.metric-grid article {
+    padding: 28px;
+    border: 1px solid #e5d8ec;
+    border-radius: 12px;
+    background: #f6effb;
+}
+
+.metric-grid span {
+    display: block;
+    font-size: 10px;
+    color: #967ba4;
+}
+
+.metric-grid strong {
+    display: block;
+    font-family: Georgia, serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: #7a548f;
+    margin: 14px 0;
+}
+
+.metric-grid small {
+    font-size: 9px;
+    color: #ac93b7;
+}
+
+.intelligence-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-bottom: 35px;
+}
+
+.intelligence-toolbar form {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: end;
+}
+
+.intelligence-toolbar label {
+    grid-column: 1 / -1;
+    margin: 0;
+}
+
+.intelligence-toolbar a {
+    font-size: 11px;
+    color: #9c7bac;
+}
+
+.report-panel {
+    overflow: hidden;
+}
+
+.report-panel table {
+    min-width: 700px;
+}
+
+.report-panel td {
+    max-width: 330px;
+    min-width: 100px;
+    overflow-wrap: anywhere;
+}
+
+.report-note {
+    padding: 15px 0;
+    border-bottom: 1px solid #eee4f3;
+    font-size: 11px;
+    color: #9b7ea9;
+}
+
+@media (max-width: 900px) {
+    .metric-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .metric-grid article {
+        padding: 20px;
+    }
+
+    .metric-grid strong {
+        font-size: 26px;
+    }
+}
+
+.report-facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.report-facts>div {
+    padding: 16px;
+    background: #faf6fc;
+    border-radius: 8px;
+}
+
+.report-facts small {
+    display: block;
+    font-size: 9px;
+    color: #887291;
+}
+
+.report-facts strong {
+    display: block;
+    font-weight: 500;
+    margin-top: 9px;
+    color: #785585;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.report-panel>h3 {
+    margin-top: 32px;
+}
+
+.business-action-panel form {
+    margin-top: 25px;
+}
+
+@media (max-width: 650px) {
+    .report-facts {
+        grid-template-columns: 1fr 1fr;
+    }
+}

@@ -1,0 +1,179 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Order | Aarohi Boutique
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/order.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="container contextual-agent">
+        <a href="{% url 'assistant' %}?agent=support">
+            ✧ Ask the order agent or prepare a cancellation / return →
+        </a>
+    </div>
+    <div class="container section">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">
+                    YOUR AAROHI ORDER
+                </span>
+                <h1 class="order-id">
+                    {{ order.number }}
+                </h1>
+                <p>
+                    {{ order.created|date:'d M Y, h:i A' }}
+                </p>
+            </div>
+            <span class="badge">
+                {{ order.get_status_display }}
+            </span>
+        </div>
+        <div class="checkout-layout">
+            <section>
+                <div class="panel">
+                    <h2>
+                        {% if order.payment_status == "paid" %}
+                            Thank you — your payment is confirmed
+                        {% elif order.payment_status == "pending" %}
+                            Payment awaiting confirmation
+                        {% else %}
+                            {{ order.get_payment_status_display }}
+                        {% endif %}
+                    </h2>
+                    <p>
+                        Payment: {{ order.get_payment_status_display }} ·
+                        {% if order.payment_mode == "demo" %}
+                            Demo order (no money collected)
+                        {% elif order.payment_mode == "cashfree" %}
+                            Cashfree{% if order.provider_payment %} · Ref {{ order.provider_payment }}{% endif %}
+                        {% else %}
+                            Razorpay
+                        {% endif %}
+                    </p>
+                    {% if order.status == "pending" %}
+                        <a href="{% url 'payment' order.pk %}" class="button">
+                            Continue / retry payment
+                        </a>
+                    {% endif %}
+                    {% if order.payment_status != "pending" %}
+                        <a class="button secondary" href="{% url 'invoice' order.pk %}">
+                            View / print invoice
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="panel">
+                    <h2>
+                        Order tracking
+                    </h2>
+                    <ol class="timeline">
+                        {% for event in order.events.all %}
+                            <li>
+                                <strong>
+                                    {{ event.message }}
+                                </strong>
+                                <small>
+                                    {{ event.created|date:'d M Y, h:i A' }}
+                                </small>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                    {% if order.courier %}
+                        <p>
+                            Courier: {{ order.courier }}
+                        </p>
+                        <p>
+                            Tracking reference: {{ order.tracking_number }}
+                        </p>
+                        {% if order.tracking_url %}
+                            <a href="{{ order.tracking_url }}" target="_blank" rel="noopener noreferrer" class="button secondary">
+                                Track shipment ↗
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <p class="muted">
+                            Shipment tracking appears once the store dispatches your order.
+                        </p>
+                    {% endif %}
+                </div>
+                {% for item in order.items.all %}
+                    <article class="panel order-line">
+                        <h3>
+                            {{ item.name }}
+                        </h3>
+                        <p>
+                            {{ item.size }} · {{ item.colour }} · Quantity {{ item.quantity }}
+                        </p>
+                        <strong>
+                            ₹{{ item.total }}
+                        </strong>
+                        {% if order.status == "delivered" %}
+                            <a class="button secondary" href="{% url 'return' item.pk %}">
+                                Request return / exchange
+                            </a>
+                        {% endif %}
+                    </article>
+                {% endfor %}
+            </section>
+            <aside>
+                <div class="panel">
+                    <h2>
+                        Delivery address
+                    </h2>
+                    <p>
+                        {{ order.shipping_address|linebreaksbr }}
+                    </p>
+                    <p>
+                        {{ order.phone }}
+                    </p>
+                    <div class="summary-item">
+                        <span>
+                            Subtotal
+                        </span>
+                        <span>
+                            ₹{{ order.subtotal }}
+                        </span>
+                    </div>
+                    <div class="summary-item">
+                        <span>
+                            Discount
+                        </span>
+                        <span>
+                            −₹{{ order.discount }}
+                        </span>
+                    </div>
+                    <div class="summary-item">
+                        <span>
+                            Shipping
+                        </span>
+                        <span>
+                            ₹{{ order.shipping }}
+                        </span>
+                    </div>
+                    <div class="summary-item total">
+                        <strong>
+                            Total
+                        </strong>
+                        <strong>
+                            ₹{{ order.total }}
+                        </strong>
+                    </div>
+                </div>
+                {% if order.status == "pending" or order.status == "confirmed" %}
+                    <form method="post" action="{% url 'cancel' order.pk %}" class="panel confirm-action" data-confirm="Cancel this order? Refunds for paid orders require store processing.">
+                        {% csrf_token %}
+                        <button class="secondary full-width">
+                            Cancel order
+                        </button>
+                    </form>
+                {% endif %}
+                <a href="{% url 'contact' %}" class="button secondary full-width">
+                    Need help?
+                </a>
+                <a class="clear-link" href="{% url 'account' %}">
+                    All my orders
+                </a>
+            </aside>
+        </div>
+    </div>
+{% endblock %}

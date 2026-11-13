@@ -1,0 +1,236 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Business Intelligence | Aarohi
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/intelligence.css' %}">
+{% endblock %}
+{% block content %}
+    <section class="container section">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">
+                    YOUR BUSINESS, WITH CLARITY
+                </span>
+                <h1>
+                    Intelligence workspace
+                </h1>
+                <p>
+                    Measured evidence. Labelled estimates. Decisions you can review.
+                </p>
+            </div>
+            <a class="button secondary" href="{% url 'operations' %}">
+                Operations centre ↗
+            </a>
+        </div>
+        <div class="metric-grid">
+            <article>
+                <span>
+                    Collected payments
+                </span>
+                <strong>
+                    ₹{{ metrics.collected_inr }}
+                </strong>
+                <small>
+                    Includes orders awaiting fulfilment
+                </small>
+            </article>
+            <article>
+                <span>
+                    Processed refunds
+                </span>
+                <strong>
+                    ₹{{ metrics.processed_refunds_inr }}
+                </strong>
+                <small>
+                    Pending refunds are excluded
+                </small>
+            </article>
+            <article>
+                <span>
+                    Net collected
+                </span>
+                <strong>
+                    ₹{{ metrics.net_collected_inr }}
+                </strong>
+                <small>
+                    Cash measure, not profit
+                </small>
+            </article>
+            <article>
+                <span>
+                    Repeat buyers
+                </span>
+                <strong>
+                    {{ metrics.segments.repeat_buyers }}
+                </strong>
+                <small>
+                    Based on recorded orders
+                </small>
+            </article>
+        </div>
+        <div class="intelligence-toolbar">
+            <form method="get">
+                <label for="report-picker">
+                    Explore a report
+                </label>
+                <select id="report-picker" name="report">
+                    {% for key, name in report_options %}
+                        <option value="{{ key }}" {% if selected_report == key %}selected{% endif %}>
+                            {{ name }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button>
+                    View report
+                </button>
+            </form>
+            <a href="/admin/">
+                Manage costs, suppliers & source data ↗
+            </a>
+        </div>
+        <section class="panel report-panel">
+            <h2>
+                {{ report_name }}
+            </h2>
+            {% if facts %}
+                <div class="report-facts">
+                    {% for title, value in facts %}
+                        <div>
+                            <small>
+                                {{ title }}
+                            </small>
+                            <strong>
+                                {{ value|default_if_none:'Data needed' }}
+                            </strong>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% for section in sections %}
+                <h3>
+                    {{ section.title }}
+                </h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                {% for column in section.columns %}
+                                    <th>
+                                        {{ column }}
+                                    </th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in section.rows %}
+                                <tr>
+                                    {% for value in row %}
+                                        <td>
+                                            {{ value|default_if_none:'Data needed' }}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% empty %}
+                <div class="empty-state">
+                    <h3>
+                        Evidence comes first.
+                    </h3>
+                    <p>
+                        Summary measures above use recorded data. Detailed reports populate when relevant sales history, costs, supplier quotes, competitor observations or location records exist.
+                    </p>
+                </div>
+            {% endfor %}
+            {% for title, note in notes %}
+                <p class="report-note">
+                    <strong>
+                        {{ title }}:
+                    </strong>
+                    {{ note }}
+                </p>
+            {% endfor %}
+        </section>
+        <details class="panel business-action-panel">
+            <summary>
+                Prepare a business action
+            </summary>
+            <p class="muted">
+                The agent can prepare the same actions in chat. This form also works without an LLM. Review and confirm before execution.
+            </p>
+            <form action="{% url 'propose_action' %}" method="post">
+                {% csrf_token %}
+                <label>
+                    Action
+                    <select name="kind">
+                        <option value="create_purchase_order">
+                            Create draft purchase order
+                        </option>
+                        <option value="approve_purchase_order">
+                            Approve internal purchase order
+                        </option>
+                        <option value="receive_purchase_order">
+                            Receive inspected purchase order
+                        </option>
+                        <option value="draft_campaign">
+                            Save campaign draft
+                        </option>
+                        <option value="approve_campaign">
+                            Approve campaign delivery
+                        </option>
+                        <option value="update_price">
+                            Change product price
+                        </option>
+                        <option value="save_seo">
+                            Publish product SEO
+                        </option>
+                        <option value="release_hold">
+                            Release reviewed order hold
+                        </option>
+                    </select>
+                </label>
+                <label>
+                    Target ID / order reference / new campaign name
+                    <input name="target" required>
+                </label>
+                <label>
+                    Value / copy / SEO JSON / defective-unit count
+                    <textarea name="value"></textarea>
+                </label>
+                <div class="two-columns">
+                    <label>
+                        Quantity
+                        <input type="number" name="quantity" min="1" value="1">
+                    </label>
+                    <label>
+                        Campaign segment
+                        <select name="extra">
+                            <option value="all_opted_in">
+                                All opted-in
+                            </option>
+                            <option value="inactive">
+                                Inactive
+                            </option>
+                            <option value="repeat">
+                                Repeat buyers
+                            </option>
+                        </select>
+                    </label>
+                </div>
+                <button>
+                    Prepare approval card →
+                </button>
+            </form>
+        </details>
+        <p class="muted">
+            {{ metrics.margin_note }}
+        </p>
+        <a class="button" href="{% url 'assistant' %}?agent=manager">
+            Discuss an action plan with the manager agent →
+        </a>
+    </section>
+{% endblock %}

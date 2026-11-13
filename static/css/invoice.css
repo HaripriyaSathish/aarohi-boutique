@@ -1,0 +1,26 @@
+.invoice h1 {
+    color: var(--purple-dark);
+}
+
+@media print {
+
+    .site-header,
+    .announcement,
+    .search-strip,
+    .site-footer,
+    .trust-strip,
+    .print-button,
+    .skip-link {
+        display: none !important;
+    }
+
+    .invoice {
+        width: 100%;
+        padding: 0;
+    }
+
+    .panel {
+        box-shadow: none;
+        border: 0;
+    }
+}

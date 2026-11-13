@@ -1,0 +1,81 @@
+.account-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    align-items: start;
+    gap: 30px;
+}
+
+.account-link {
+    display: block;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.order-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+@media (max-width: 850px) {
+    .account-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.account-layout {
+    grid-template-columns: 270px minmax(0, 1fr);
+    gap: 35px;
+}
+
+.account-layout>aside {
+    background: #f7f1fa;
+    border-color: #e7daee;
+    padding: 30px;
+}
+
+.account-layout>aside h2 {
+    font-size: 30px;
+}
+
+.account-link {
+    padding: 13px 0;
+    color: #92749f;
+    font-size: 11px;
+}
+
+.account-layout>section>h2 {
+    font-size: 31px;
+    margin: 8px 0 26px;
+}
+
+.order-card {
+    border-radius: 9px;
+    border-left: 3px solid #c9abdb;
+    padding: 25px 28px;
+}
+
+.order-card p {
+    font-size: 10px;
+    color: #a68eaf;
+}
+
+.order-card>div>strong {
+    color: #785787;
+    font-size: 13px;
+}
+
+.order-card .button {
+    font-size: 10px;
+    padding: 10px 14px;
+}
+
+@media (max-width: 850px) {
+    .account-layout {
+        grid-template-columns: 1fr;
+    }
+}

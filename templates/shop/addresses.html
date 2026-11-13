@@ -1,0 +1,64 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Addresses | Aarohi Boutique
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/addresses.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="container section">
+        <div class="page-heading">
+            <h1>
+                Saved addresses
+            </h1>
+            <p>
+                Your first saved address fills checkout automatically; you can edit delivery details at checkout.
+            </p>
+        </div>
+        <div class="two-columns">
+            <section>
+                {% for address in addresses %}
+                    <article class="panel">
+                        <h2>
+                            {{ address.name }}
+                        </h2>
+                        <p>
+                            {{ address.line1 }}
+                            <br>
+                            {{ address.line2 }}
+                            <br>
+                            {{ address.city }}, {{ address.state }} {{ address.postcode }}
+                        </p>
+                        <p>
+                            {{ address.phone }}
+                        </p>
+                        <a href="?edit={{ address.pk }}" class="button secondary">
+                            Edit address
+                        </a>
+                        <form method="post" action="{% url 'delete_address' address.pk %}">
+                            {% csrf_token %}
+                            <button class="secondary">
+                                Delete address
+                            </button>
+                        </form>
+                    </article>
+                {% empty %}
+                    <p>
+                        No addresses saved yet.
+                    </p>
+                {% endfor %}
+            </section>
+            <form method="post" class="panel">
+                {% csrf_token %}
+                <h2>
+                    Save delivery address
+                </h2>
+                {{ form.as_p }}
+                <button>
+                    Save address
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

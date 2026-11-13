@@ -1,0 +1,35 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Terms | Aarohi Boutique
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/terms.css' %}">
+{% endblock %}
+{% block content %}
+    <section class="container section narrow">
+        <span class="eyebrow">
+            AAROHI BOUTIQUE
+        </span>
+        <h1>
+            Terms & conditions
+        </h1>
+        <article class="panel prose">
+            <h2>
+                Shopping with us
+            </h2>
+            <p>
+                Prices are in INR. Availability depends on selected size and colour. Orders are confirmed after payment verification. Product colours may vary with screens; contact us for fit advice before purchase.
+            </p>
+            <h2>
+                Order changes
+            </h2>
+            <p>
+                Orders may be cancelled before packing. Delivery estimates are not guarantees. Returns are subject to the published policy and inspection.
+            </p>
+            <p>
+                Store owner: replace this starter text with business-specific terms before launch.
+            </p>
+        </article>
+    </section>
+{% endblock %}

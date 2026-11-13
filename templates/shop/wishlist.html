@@ -1,0 +1,45 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Wishlist | Aarohi Boutique
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/wishlist.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="container contextual-agent">
+        <a href="{% url 'assistant' %}?agent=stylist">
+            ✧ Find styles that match your favourites →
+        </a>
+    </div>
+    <div class="container section">
+        <div class="page-heading">
+            <span class="eyebrow">
+                SAVED FOR LATER
+            </span>
+            <h1>
+                Your lovely little wishlist
+            </h1>
+            <p>
+                All your favourites, in one place.
+            </p>
+        </div>
+        <div class="product-grid">
+            {% for product in products %}
+                {% include "shop/_product_card.html" %}
+            {% empty %}
+                <div class="empty-state">
+                    <h2>
+                        Something caught your eye?
+                    </h2>
+                    <p>
+                        Tap the heart on any style to save it here.
+                    </p>
+                    <a href="{% url 'shop' %}" class="button">
+                        Explore collections
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

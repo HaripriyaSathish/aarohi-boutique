@@ -1,0 +1,104 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Your Boutique Assistant | Aarohi
+{% endblock %}
+{% block css %}
+    {% if request.GET.widget %}<link rel="stylesheet" href="{% static 'css/ai_widget_inner.css' %}">{% endif %}
+    <link rel="stylesheet" href="{% static 'css/assistant.css' %}">
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'js/assistant.js' %}" defer>
+    </script>
+{% endblock %}
+{% block content %}
+    <section class="container section">
+        <div class="page-heading">
+            <span class="eyebrow">
+                YOUR PERSONAL BOUTIQUE COMPANION
+            </span>
+            <h1>
+                A little help, beautifully personal.
+            </h1>
+            <p>
+                Find your style, check your orders, and get answers from the store.
+            </p>
+        </div>
+        {% if ai_mode == "local" %}<p class="muted">Rules-based, not generative AI</p>{% endif %}
+        <div class="ai-studio-intro">
+            <span class="eyebrow">YOUR AI SHOPPING STUDIO</span>
+            <h2>Choose how we can help</h2>
+            <p>Find your perfect outfit, manage your bag, or get order help — chat or speak naturally.</p>
+        </div>
+        <div class="agent-card-grid" id="agent-card-grid" role="group" aria-label="Choose your AI assistant">
+            <button type="button" class="agent-choice" data-agent="auto" aria-pressed="true"><span class="agent-choice-icon">✦</span><strong>Smart Assistant</strong><small>Choose the right help for me</small></button>
+            {% for key, name in agent_options %}
+            <button type="button" class="agent-choice" data-agent="{{ key }}" aria-pressed="false"><span class="agent-choice-icon" aria-hidden="true">{% if key == 'stylist' %}✧{% elif key == 'support' %}♡{% elif key == 'cart' %}▣{% elif key == 'payment' %}◇{% elif key == 'returns' %}↺{% elif key == 'voice' %}♫{% else %}✦{% endif %}</span><strong>{{ name }}</strong><small>{% if key == 'stylist' %}Discover your style{% elif key == 'support' %}Orders and questions{% elif key == 'cart' %}Bag and checkout{% elif key == 'payment' %}Payment support{% elif key == 'returns' %}Returns and exchanges{% elif key == 'voice' %}Shop by speaking{% else %}Personalized assistance{% endif %}</small></button>
+            {% endfor %}
+        </div>
+        <select id="agent-select" class="sr-only" aria-label="Selected AI assistant">
+            <option value="auto">Auto — choose for me</option>
+            {% for key, name in agent_options %}<option value="{{ key }}">{{ name }}</option>{% endfor %}
+        </select>
+        <div class="assistant-layout ai-studio-layout">
+            <section class="panel chat-panel" aria-label="Boutique assistant chat">
+                <div class="chat-toolbar">
+                    <span>✧ <strong id="active-agent-name">Smart Assistant</strong> <small>· Your boutique, at your service</small></span>
+                    <button id="clear-chat" type="button" class="secondary">
+                        Clear chat
+                    </button>
+                </div>
+                <div id="chat-messages" class="chat-messages" aria-live="polite" aria-relevant="additions">
+                    <div class="chat-bubble assistant-bubble">
+                        Hi! Tell me what you are looking for. Try “cotton kurta under 2500, size M” or “Track my orders”.
+                    </div>
+                </div>
+                <div class="prompt-chips">
+                    <button type="button" data-prompt="Show cotton kurtas under 2500, size M">
+                        Kurtas under ₹2,500
+                    </button>
+                    <button type="button" data-prompt="Show festive sarees">
+                        Festive sarees
+                    </button>
+                    <button type="button" data-prompt="Track my orders">
+                        Track my orders
+                    </button>
+                </div>
+                <div class="voice-controls">
+                    <label for="voice-language">
+                        Speak in
+                    </label>
+                    <select id="voice-language">
+                        <option value="en-IN">
+                            English
+                        </option>
+                        <option value="tanglish">Tanglish (Tamil + English)</option>
+                        <option value="ta-IN">
+                            Tamil
+                        </option>
+                    </select>
+                    <button id="voice-input" type="button" class="secondary">
+                        Use voice
+                    </button>
+                    <small>
+                        Voice availability depends on your browser and device.
+                    </small>
+                </div>
+                <label class="routine-consent"><input id="authorize-routine" type="checkbox" checked> Allow this assistant to make requested routine updates. Important changes may need confirmation.</label>
+                <label class="voice-reply-option"><input id="auto-speak" type="checkbox"> Read replies aloud</label>
+                <form id="assistant-form" action="{% url 'assistant_chat' %}" method="post">
+                    {% csrf_token %}
+                    <label class="sr-only" for="assistant-input">
+                        Your message
+                    </label>
+                    <textarea id="assistant-input" name="message" rows="2" maxlength="1200" placeholder="Ask about style, orders or store policies…" required></textarea>
+                    <button id="assistant-send" type="submit">
+                        Send ↗
+                    </button>
+                </form>
+                <p id="chat-status" class="muted" role="status">
+                </p>
+            </section>
+        </div>
+    </section>
+{% endblock %}

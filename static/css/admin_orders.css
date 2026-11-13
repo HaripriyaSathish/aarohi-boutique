@@ -1,0 +1,13 @@
+.order-metrics {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.order-metrics>div {
+    padding: 20px;
+    background: #f3edf9;
+    color: #52366e;
+    border-radius: 12px;
+}

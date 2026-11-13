@@ -1,0 +1,136 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Account | Aarohi Boutique
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/account.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="container contextual-agent">
+        <a href="{% url 'assistant' %}?agent=support">
+            ✧ Your order & support agent →
+        </a>
+    </div>
+    <div class="container section">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">
+                    YOUR PERSONAL SPACE
+                </span>
+                <h1>
+                    Hello, {{ user.first_name|default:user.username }}
+                </h1>
+            </div>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button class="secondary">
+                    Sign out
+                </button>
+            </form>
+        </div>
+        <p>
+            <a class="button secondary" href="{% url 'notifications' %}">
+                Notifications & preferences →
+            </a>
+        </p>
+        <div class="account-layout">
+            <aside class="panel">
+                <h2>
+                    My account
+                </h2>
+                <a class="account-link" href="{% url 'addresses' %}">
+                    Saved addresses ↗
+                </a>
+                <a class="account-link" href="{% url 'wishlist' %}">
+                    My wishlist ↗
+                </a>
+                <a class="account-link" href="{% url 'password_change' %}">
+                    Change password ↗
+                </a>
+                <form method="post">
+                    {% csrf_token %}
+                    <label>
+                        First name
+                        <input name="first_name" value="{{ user.first_name }}" maxlength="150">
+                    </label>
+                    <label>
+                        Last name
+                        <input name="last_name" value="{{ user.last_name }}" maxlength="150">
+                    </label>
+                    <p>
+                        {{ user.email }}
+                    </p>
+                    <button>
+                        Save profile
+                    </button>
+                </form>
+            </aside>
+            <section>
+                <h2>
+                    My orders
+                </h2>
+                {% for order in orders %}
+                    <article class="order-card panel">
+                        <div>
+                            <strong class="order-id">
+                                {{ order.number }}
+                            </strong>
+                            <p>
+                                {{ order.created|date:'d M Y' }}
+                            </p>
+                        </div>
+                        <div>
+                            <strong>
+                                ₹{{ order.total }}
+                            </strong>
+                            <p>
+                                <span class="badge status-{{ order.status }}">
+                                    {{ order.get_status_display }}
+                                </span>
+                                · {{ order.get_payment_status_display }}
+                            </p>
+                        </div>
+                        <a class="button secondary" href="{% url 'order' order.pk %}">
+                            Details & tracking →
+                        </a>
+                    </article>
+                {% empty %}
+                    <div class="empty-state">
+                        <h2>
+                            Your story starts here
+                        </h2>
+                        <a class="button" href="{% url 'shop' %}">
+                            Find your first favourite
+                        </a>
+                    </div>
+                {% endfor %}
+                <h2>
+                    Returns & exchanges
+                </h2>
+                {% for result in returns %}
+                    <article class="panel">
+                        <h3>
+                            {{ result.item.name }}
+                        </h3>
+                        <p>
+                            {{ result.get_kind_display }} · {{ result.get_status_display }}
+                        </p>
+                        <p>
+                            {{ result.staff_note }}
+                        </p>
+                        {% if result.refund_status != "none" %}
+                            <p>
+                                Refund: ₹{{ result.refund_amount }} · {{ result.refund_status }}
+                            </p>
+                        {% endif %}
+                    </article>
+                {% empty %}
+                    <p class="muted">
+                        No requests yet.
+                    </p>
+                {% endfor %}
+            </section>
+        </div>
+    </div>
+{% endblock %}

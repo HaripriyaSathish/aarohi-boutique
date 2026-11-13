@@ -1,0 +1,13 @@
+{% extends 'shop/base.html' %}
+{% block title %}Review your order | Aarohi{% endblock %}
+{% block content %}
+<section class="container section"><span class="eyebrow">YOUR PERSONAL SHOPPER</span><h1>A little closer to yours.</h1>
+<p>Review every detail before creating your order. Payment follows on the secure checkout screen.</p>
+<div class="checkout-grid"><div class="panel"><h2>Your selection</h2>
+{% for line in lines %}<p><strong>{{ line.variant.product.name }}</strong> · {{ line.variant.size }} · {{ line.variant.colour }} × {{ line.quantity }} <span>₹{{ line.total }}</span></p>{% endfor %}
+<p>Subtotal ₹{{ subtotal }} · Discount ₹{{ discount }} · Delivery ₹{{ shipping }}</p><h2>Total ₹{{ total }}</h2>
+<p>Quoted total ₹{{ journey.totals.total }}. Prices and stock are checked again when you approve.</p></div>
+<div class="panel"><h2>Deliver to</h2><p>{{ journey.delivery.name }}<br>{{ journey.delivery.line1 }} {{ journey.delivery.line2 }}<br>{{ journey.delivery.city }}, {{ journey.delivery.state }} {{ journey.delivery.postcode }}</p><p>{{ journey.delivery.phone }} · {{ journey.delivery.email }}</p>
+<form method="post">{% csrf_token %}<label><input type="checkbox" name="authorize" value="yes" required> I approve these items, delivery details and the quoted total.</label><p><button type="submit">Create order & continue to payment ↗</button></p></form>
+<small>Valid until {{ journey.expires }}. Repeated approval opens the same order. No card or UPI details are collected in chat.</small></div></div></section>
+{% endblock %}

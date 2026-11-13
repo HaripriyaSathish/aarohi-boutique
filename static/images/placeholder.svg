@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800">
+    <rect width="600" height="800" fill="#eee5f6"/>
+    <path d="M220 180 L160 230 L110 370 L190 400 L210 350 L180 680 L420 680 L390 350 L410 400 L490 370 L440 230 L380 180 L350 215 L250 215 Z" fill="#b69aca"/>
+    <path d="M250 215 Q300 300 350 215" fill="none" stroke="#76549b" stroke-width="8"/>
+    <text x="300" y="745" text-anchor="middle" fill="#76549b" font-family="Georgia" font-size="24">Aarohi Collection</text>
+</svg>

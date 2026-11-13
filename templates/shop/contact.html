@@ -1,0 +1,68 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Contact | Aarohi Boutique
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/contact.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="container contextual-agent">
+        <a href="{% url 'assistant' %}?agent=support">
+            ✧ Try the customer support agent →
+        </a>
+    </div>
+    <div class="container section">
+        <div class="page-heading">
+            <span class="eyebrow">
+                WE WOULD LOVE TO HELP
+            </span>
+            <h1>
+                Let's talk
+            </h1>
+            <p>
+                Questions about your order, fit, fabric or your next special occasion?
+            </p>
+        </div>
+        <div class="two-columns">
+            <section class="contact-info panel">
+                <h2>
+                    A little personal attention
+                </h2>
+                <p>
+                    {{ store.address|linebreaksbr }}
+                </p>
+                <a href="mailto:{{ store.email }}">
+                    {{ store.email }}
+                </a>
+                <p>
+                    {{ store.phone }}
+                </p>
+                {% if store.whatsapp %}
+                    <a class="button secondary" href="https://wa.me/{{ store.whatsapp }}">
+                        Chat on WhatsApp ↗
+                    </a>
+                {% endif %}
+                <h3>
+                    Already placed an order?
+                </h3>
+                <p>
+                    Include your order number so we can help you sooner.
+                </p>
+                <a href="{% url 'account' %}">
+                    My orders →
+                </a>
+            </section>
+            <form class="panel" method="post">
+                {% csrf_token %}
+                <h2>
+                    Send us a message
+                </h2>
+                {{ form.as_p }}
+                <button>
+                    Send message →
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Return | Aarohi Boutique
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/return.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="container contextual-agent">
+        <a href="{% url 'assistant' %}?agent=returns">
+            ✧ Ask the returns agent →
+        </a>
+    </div>
+    <div class="container section narrow">
+        <span class="eyebrow">
+            LET US MAKE IT RIGHT
+        </span>
+        <h1>
+            Return or size exchange
+        </h1>
+        <div class="panel">
+            <h2>
+                {{ item.name }}
+            </h2>
+            <p>
+                {{ item.size }} · {{ item.colour }} · Quantity {{ item.quantity }}
+            </p>
+            <p>
+                Pickup is from your original delivery address. Requests are reviewed by the store. After inspection, approved returns are refunded to the original payment method. The original shipping fee is not refunded after delivery. Each request covers the full quantity of the selected order line.
+            </p>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="full-width">
+                    Submit request
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

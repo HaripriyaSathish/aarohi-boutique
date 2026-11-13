@@ -1,0 +1,5 @@
+{% extends "admin/base.html" %}{% load static %}
+{% block title %}{{ title }} | Aarohi Atelier{% endblock %}
+{% block branding %}<div id="site-name"><a href="{% url 'admin:index' %}">AAROHI <span style="font-size:12px;letter-spacing:.18em">ATELIER / CONTROL ROOM</span></a></div>{% endblock %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/admin_premium.css' %}">{% endblock %}
+{% block nav-global %}<a href="{% url 'agent_hub' %}">Agent Studio ↗</a> &nbsp; <a href="{% url 'operations' %}">Operations ↗</a>{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Review agent action | Aarohi
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/action_review.css' %}">
+{% endblock %}
+{% block content %}
+    <section class="container section narrow">
+        <span class="eyebrow">
+            REVIEW BEFORE EXECUTION
+        </span>
+        <h1>
+            Your agent prepared an action
+        </h1>
+        <div class="panel">
+            <p class="action-summary">
+                {{ action.summary }}
+            </p>
+            <p>
+                Status: {{ action.state }} · Valid until {{ action.expires_at|date:'h:i A' }}
+            </p>
+            {% if action.state == 'pending' %}
+                <form method="post" action="{% url 'action_confirm' action.pk %}">
+                    {% csrf_token %}
+                    <button class="full-width">
+                        Confirm this exact action
+                    </button>
+                </form>
+                <form method="post" action="{% url 'action_reject' action.pk %}">
+                    {% csrf_token %}
+                    <button class="secondary full-width">
+                        Reject
+                    </button>
+                </form>
+            {% endif %}
+            <p class="muted">
+                Eligibility, permissions, price and stock are checked again on confirmation. Packing/inspection confirmations attest that the physical work has been done.
+            </p>
+        </div>
+    </section>
+{% endblock %}

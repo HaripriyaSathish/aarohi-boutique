@@ -1,0 +1,420 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+    Home | {{ store.name|default:'Aarohi Boutique' }}
+{% endblock %}
+
+{% block css %}
+    <link
+        rel="stylesheet"
+        href="{% static 'css/home.css' %}?v=5"
+    >
+{% endblock %}
+
+{% block content %}
+<div class="ah-page">
+
+    <!-- CATEGORY NAVIGATION -->
+    <div
+        class="ah-category-nav ah-wrap"
+        aria-label="Browse collections"
+    >
+        <a href="{% url 'shop' %}" class="ah-active">
+            All collections
+        </a>
+
+        {% for category in nav_categories %}
+            <a
+                href="{% url 'shop' %}?category={{ category.slug|urlencode }}"
+            >
+                {{ category.name }}
+            </a>
+        {% endfor %}
+    </div>
+
+    <!-- HERO -->
+    <section
+        class="ah-hero ah-wrap"
+        aria-labelledby="ah-title"
+    >
+        <div class="ah-hero-copy">
+
+            <span class="ah-label">
+                <span class="ah-dot"></span>
+                THE AAROHI EDIT
+            </span>
+
+            <h1 id="ah-title">
+                {{ store.hero_title|default:'Your everyday. A little extraordinary.' }}
+            </h1>
+
+            <p>
+                Beautiful silhouettes, thoughtful details.
+                Find the pieces that feel like you.
+            </p>
+
+            <a class="ah-button" href="{% url 'shop' %}">
+                Find your next favourite
+                <span>↗</span>
+            </a>
+
+            <a
+                class="ah-text-link"
+                href="{% url 'shop' %}?sort=new"
+            >
+                Discover new arrivals →
+            </a>
+
+            <div class="ah-hero-bottom">
+                <span>EVERYDAY ELEGANCE</span>
+                <span>✧</span>
+                <span>BEAUTIFULLY YOURS</span>
+            </div>
+
+        </div>
+
+        <div class="ah-hero-visual">
+
+            {% if store.hero_image %}
+                <img
+                    src="{{ store.hero_image.url }}"
+                    alt="Aarohi women's fashion collection"
+                    fetchpriority="high"
+                >
+            {% else %}
+                <img
+                    src="{% static 'images/placeholder.svg' %}"
+                    alt="Explore the Aarohi collection"
+                >
+            {% endif %}
+
+            <span class="ah-photo-label">
+                THE NEW SEASON COLLECTION
+            </span>
+
+            <a
+                class="ah-image-link"
+                href="{% url 'shop' %}"
+            >
+                <span>
+                    Wear what<br>
+                    <strong>feels like you.</strong>
+                </span>
+
+                <span class="ah-circle">↗</span>
+            </a>
+
+        </div>
+    </section>
+
+    <!-- BENEFITS -->
+    <div class="ah-benefits ah-wrap">
+
+        <div>
+            <span>✧</span>
+            <p>
+                Thoughtfully curated
+                <small>Styles worth discovering</small>
+            </p>
+        </div>
+
+        <div>
+            <span>↗</span>
+            <p>
+                Find your fit
+                <small>Explore sizes on each product</small>
+            </p>
+        </div>
+
+        <div>
+            <span>♡</span>
+            <p>
+                A little personal help
+                <small>Your AI stylist is here</small>
+            </p>
+        </div>
+
+    </div>
+
+    <!-- CATEGORIES -->
+    <section
+        class="ah-section ah-wrap"
+        aria-labelledby="ah-collections"
+    >
+        <header class="ah-heading">
+            <div>
+                <span class="ah-kicker">
+                    SO MANY WAYS TO BE YOU
+                </span>
+
+                <h2 id="ah-collections">
+                    Find your
+                    <em>kind of beautiful.</em>
+                </h2>
+            </div>
+
+            <a
+                class="ah-text-link"
+                href="{% url 'shop' %}"
+            >
+                Shop all collections ↗
+            </a>
+        </header>
+
+        <div class="ah-categories">
+
+            {% for category in nav_categories %}
+                <a
+                    class="ah-category"
+                    href="{% url 'shop' %}?category={{ category.slug|urlencode }}"
+                >
+                    <div>
+                        {% if category.image %}
+                            <img
+                                src="{{ category.image.url }}"
+                                alt="{{ category.name }}"
+                                loading="lazy"
+                            >
+                        {% else %}
+                            <img
+                                src="{% static 'images/placeholder.svg' %}"
+                                alt="{{ category.name }}"
+                                loading="lazy"
+                            >
+                        {% endif %}
+
+                        <span class="ah-category-arrow">
+                            ↗
+                        </span>
+                    </div>
+
+                    <h3>{{ category.name }}</h3>
+                </a>
+            {% empty %}
+                <p>
+                    Our collections are being prepared.
+                    <a href="{% url 'shop' %}">
+                        Explore the shop →
+                    </a>
+                </p>
+            {% endfor %}
+
+        </div>
+    </section>
+
+    <!-- FEATURED PRODUCTS -->
+    <section class="ah-featured-band">
+        <div class="ah-wrap ah-section">
+
+            <header class="ah-heading">
+                <div>
+                    <span class="ah-kicker">
+                        THE GOOD FINDS
+                    </span>
+
+                    <h2>
+                        Selected with care.<br>
+                        <em>Styled by you.</em>
+                    </h2>
+                </div>
+
+                <a
+                    class="ah-text-link"
+                    href="{% url 'shop' %}"
+                >
+                    Explore the edit ↗
+                </a>
+            </header>
+
+            <div class="ah-products">
+                {% for product in featured %}
+                    {% include 'shop/_product_card.html' %}
+                {% empty %}
+                    <p>
+                        Our featured pieces will appear here soon.
+                    </p>
+                {% endfor %}
+            </div>
+
+        </div>
+    </section>
+
+    <!-- COLLECTION BANNERS -->
+    {% if banners %}
+        <section
+            class="ah-section ah-wrap"
+            aria-label="Collection inspiration"
+        >
+            <div class="ah-banners">
+
+                {% for banner in banners %}
+                    <a
+                        class="ah-banner"
+                        href="{% url 'shop' %}{% if banner.category %}?category={{ banner.category.slug|urlencode }}{% endif %}"
+                    >
+                        <div class="ah-banner-copy">
+
+                            <span class="ah-kicker">
+                                A NEW PERSPECTIVE
+                            </span>
+
+                            <h2>{{ banner.title }}</h2>
+
+                            <p>{{ banner.subtitle }}</p>
+
+                            <span class="ah-text-link">
+                                Find your moment ↗
+                            </span>
+
+                        </div>
+
+                        {% if banner.image %}
+                            <img
+                                src="{{ banner.image.url }}"
+                                alt="{{ banner.title }}"
+                                loading="lazy"
+                            >
+                        {% else %}
+                            <div
+                                class="ah-banner-art"
+                                aria-hidden="true"
+                            >
+                                ✧
+                            </div>
+                        {% endif %}
+
+                    </a>
+                {% endfor %}
+
+            </div>
+        </section>
+    {% endif %}
+
+    <!-- NEW ARRIVALS -->
+    <section
+        class="ah-section ah-wrap"
+        aria-labelledby="ah-new"
+    >
+        <header class="ah-heading">
+
+            <div>
+                <span class="ah-kicker">
+                    JUST LANDED
+                </span>
+
+                <h2 id="ah-new">
+                    A fresh chapter.
+                    <em>For your wardrobe.</em>
+                </h2>
+            </div>
+
+            <a
+                class="ah-text-link"
+                href="{% url 'shop' %}?sort=new"
+            >
+                See what's new ↗
+            </a>
+
+        </header>
+
+        <div class="ah-products">
+            {% for product in new_products %}
+                {% include 'shop/_product_card.html' %}
+            {% empty %}
+                <p>
+                    New arrivals are on their way.
+                    Explore our existing collections.
+                </p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- AI STYLIST -->
+    <section
+        class="ah-stylist ah-wrap"
+        aria-labelledby="ah-stylist-title"
+    >
+        <div class="ah-stylist-art" aria-hidden="true">
+            <div class="ah-orbit"></div>
+
+            <span>✧</span>
+
+            <p>
+                A LITTLE INSPIRATION.<br>
+                A STYLE THAT'S YOURS.
+            </p>
+        </div>
+
+        <div class="ah-stylist-copy">
+
+            <span class="ah-kicker">
+                MEET YOUR STYLE COMPANION
+            </span>
+
+            <h2 id="ah-stylist-title">
+                A special occasion?<br>
+                <em>Let's find your look.</em>
+            </h2>
+
+            <p>
+                Tell your AI stylist your budget, size and
+                occasion. Discover real pieces from our
+                collection.
+            </p>
+
+            <div class="ah-actions">
+
+                <a
+                    class="ah-button"
+                    href="{% url 'assistant' %}?agent=stylist"
+                >
+                    Ask your stylist
+                    <span>✧</span>
+                </a>
+
+                <a
+                    class="ah-text-link"
+                    href="{% url 'ai_studio' %}"
+                >
+                    Search with a photo ↗
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- BRAND STORY -->
+    <section class="ah-story ah-wrap">
+
+        <span class="ah-kicker">
+            THE HEART OF AAROHI
+        </span>
+
+        <h2>
+            More than a wardrobe.<br>
+            <em>A little expression of you.</em>
+        </h2>
+
+        <a
+            class="ah-text-link"
+            href="{% url 'information' 'about' %}"
+        >
+            Discover our story ↗
+        </a>
+
+    </section>
+
+    <!-- FLOATING STYLIST LINK -->
+    <a
+        class="ah-floating"
+        href="{% url 'assistant' %}?agent=stylist"
+        aria-label="Open AI shopping stylist"
+    >
+        <span>✧</span>
+        <span>Ask your stylist</span>
+    </a>
+
+</div>
+{% endblock %}

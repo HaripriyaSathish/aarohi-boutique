@@ -1,0 +1,39 @@
+.operations-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(300px, 1fr);
+    gap: 30px;
+    align-items: start;
+}
+
+.operations-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin: 0 0 30px;
+}
+
+.operations-nav a {
+    border-radius: 30px;
+    padding: 10px 16px;
+    color: var(--purple);
+    background: var(--soft);
+}
+
+.operations-grid h2 {
+    font-size: 27px;
+}
+
+.operations-grid input[type='checkbox'] {
+    width: 20px;
+    min-height: 20px;
+}
+
+.task-card p {
+    font-size: 13px;
+}
+
+@media (max-width: 800px) {
+    .operations-grid {
+        grid-template-columns: 1fr;
+    }
+}

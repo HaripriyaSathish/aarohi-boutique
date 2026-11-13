@@ -1,0 +1,33 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Register | Aarohi Boutique
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
+{% block content %}
+    <section class="container section narrow">
+        <div class="panel">
+            <span class="eyebrow">
+                YOUR STYLE STORY STARTS HERE
+            </span>
+            <h1>
+                Create an account
+            </h1>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="full-width">
+                    Create account →
+                </button>
+            </form>
+            <p>
+                Already registered?
+                <a href="{% url 'login' %}">
+                    Sign in
+                </a>
+            </p>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,128 @@
+.bag-item {
+    display: grid;
+    grid-template-columns: 130px 1fr auto;
+    gap: 22px;
+}
+
+.bag-item img {
+    width: 130px;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.bag-item h2 {
+    font-size: 23px;
+}
+
+.bag-item input {
+    max-width: 80px;
+}
+
+.coupon-box {
+    margin-top: 25px;
+}
+
+.checkout-button {
+    margin-top: 0;
+}
+
+@media (max-width: 580px) {
+    .bag-item {
+        grid-template-columns: 85px 1fr;
+        gap: 15px;
+    }
+
+    .bag-item img {
+        width: 85px;
+    }
+
+    .bag-item>strong {
+        grid-column: 2;
+    }
+}
+
+.bag-item {
+    grid-template-columns: 125px 1fr auto;
+    padding: 24px;
+    border-radius: 10px;
+}
+
+.bag-item img {
+    width: 125px;
+    height: 155px;
+    object-fit: cover;
+    object-position: center 20%;
+    border-radius: 6px;
+}
+
+.bag-item h2 {
+    font-size: 24px;
+    margin: 0 0 10px;
+    color: #6d5078;
+}
+
+.bag-item p {
+    font-size: 11px;
+    color: #a18ba8;
+}
+
+.bag-item .inline-form button {
+    font-size: 10px;
+    padding: 10px 14px;
+}
+
+.coupon-box {
+    border-style: dashed;
+    background: #faf6fd;
+}
+
+.shipping-progress {
+    padding: 20px 24px;
+    background: #f1e9f7;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.shipping-progress p {
+    font-size: 11px;
+    color: #8b6e9c;
+}
+
+.shipping-progress progress {
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    border: 0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.shipping-progress progress::-webkit-progress-bar {
+    background: #e5d6ed;
+}
+
+.shipping-progress progress::-webkit-progress-value {
+    background: #9c7ab0;
+}
+
+.shipping-progress progress::-moz-progress-bar {
+    background: #9c7ab0;
+}
+
+@media (max-width: 580px) {
+    .bag-item {
+        grid-template-columns: 80px 1fr;
+        padding: 18px;
+        gap: 15px;
+    }
+
+    .bag-item img {
+        width: 80px;
+        height: 120px;
+    }
+
+    .bag-item h2 {
+        font-size: 21px;
+    }
+}

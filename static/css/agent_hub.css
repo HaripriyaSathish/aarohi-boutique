@@ -1,0 +1,61 @@
+.agent-hub-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 25px;
+}
+
+.agent-hub-card {
+    border: 1px solid #e8ddef;
+    background: #fdfafe;
+    padding: 32px;
+    border-radius: 12px;
+    transition: transform .25s, box-shadow .25s;
+}
+
+.agent-hub-card:nth-child(3n+2) {
+    background: #f5eff9;
+}
+
+.agent-hub-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 35px #76549b12;
+}
+
+.agent-number {
+    font-family: Georgia, serif;
+    color: #c9b2d7;
+    font-size: 33px;
+}
+
+.agent-hub-card h2 {
+    font-size: 28px;
+    margin: 22px 0 15px;
+}
+
+.agent-hub-card p {
+    color: #9c87a8;
+    font-size: 12px;
+    min-height: 65px;
+    line-height: 1.8;
+}
+
+.agent-hub-card a {
+    display: inline-block;
+    color: #8a669e;
+    border-bottom: 1px solid #cdb6da;
+    margin-top: 15px;
+    padding-bottom: 5px;
+    font-size: 11px;
+}
+
+@media (max-width: 950px) {
+    .agent-hub-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 550px) {
+    .agent-hub-grid {
+        grid-template-columns: 1fr;
+    }
+}

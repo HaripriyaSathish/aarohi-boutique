@@ -1,0 +1,1003 @@
+/* =========================
+   HOMEPAGE THEME
+========================= */
+
+.ah-page {
+    --ah-ink: #302036;
+    --ah-purple: #633d79;
+    --ah-deep: #45274f;
+    --ah-lilac: #ede4f3;
+    --ah-cream: #fffcf8;
+    --ah-muted: #796d7d;
+    --ah-line: #e7dfe9;
+
+    background: var(--ah-cream);
+    color: var(--ah-ink);
+    padding-bottom: 12px;
+}
+
+.ah-page *,
+.ah-page *::before,
+.ah-page *::after {
+    box-sizing: border-box;
+}
+
+.ah-page a {
+    text-decoration: none;
+}
+
+.ah-page a:focus-visible {
+    outline: 3px solid #a77cb8;
+    outline-offset: 5px;
+}
+
+.ah-page img {
+    display: block;
+    width: 100%;
+}
+
+.ah-wrap {
+    width: min(1280px, calc(100% - 64px));
+    margin-inline: auto;
+}
+
+.ah-page em {
+    color: var(--ah-purple);
+    font-weight: 400;
+}
+
+/* =========================
+   CATEGORY NAVIGATION
+========================= */
+
+.ah-page .ah-category-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 26px;
+    overflow: visible;
+    padding-block: 18px;
+    scrollbar-width: none;
+    font-size: 12px;
+}
+
+.ah-category-nav a {
+    color: var(--ah-muted);
+    padding-bottom: 5px;
+}
+
+.ah-category-nav a:hover,
+.ah-category-nav .ah-active {
+    color: var(--ah-deep);
+}
+
+.ah-category-nav .ah-active {
+    border-bottom: 2px solid var(--ah-purple);
+}
+
+/* =========================
+   HERO
+========================= */
+
+.ah-hero {
+    display: grid;
+    grid-template-columns: .85fr 1.25fr;
+    min-height: 490px;
+    border-radius: 24px;
+    overflow: hidden;
+    background: #eee5f1;
+}
+
+.ah-hero-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 44px 40px 24px;
+
+    background: radial-gradient(
+        ellipse at 0 0,
+        #fffbf5 0,
+        transparent 75%
+    );
+}
+
+.ah-label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 10px;
+    letter-spacing: .17em;
+    font-weight: 650;
+}
+
+.ah-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #98729e;
+    box-shadow: 0 0 0 5px #98729e12;
+}
+
+.ah-page .ah-hero h1 {
+    font-size: clamp(34px, 3.5vw, 51px);
+    line-height: 1.13;
+    letter-spacing: -.045em;
+    margin: 25px 0 18px;
+    color: var(--ah-ink);
+}
+
+.ah-hero-copy > p {
+    max-width: 300px;
+    color: var(--ah-muted);
+    font-size: 14px;
+    line-height: 1.8;
+    margin: 0 0 26px;
+}
+
+.ah-page .ah-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    min-height: 49px;
+    padding: 13px 22px;
+    border-radius: 8px;
+    background: var(--ah-deep);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+
+    transition:
+        background .2s,
+        transform .2s;
+}
+
+.ah-page .ah-button:hover {
+    background: #744a84;
+    transform: translateY(-2px);
+    color: #fff;
+}
+
+.ah-button span {
+    font-size: 20px;
+}
+
+.ah-page .ah-text-link {
+    display: inline-block;
+    width: fit-content;
+    color: var(--ah-deep);
+    font-size: 12px;
+    font-weight: 600;
+    border-bottom: 1px solid #bda4c6;
+    padding-bottom: 5px;
+}
+
+.ah-hero-copy > .ah-text-link {
+    margin-top: 18px;
+}
+
+.ah-hero-bottom {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 32px;
+    font-size: 8px;
+    letter-spacing: .12em;
+    color: #8a748e;
+}
+
+.ah-hero-visual {
+    position: relative;
+    min-width: 0;
+    min-height: 490px;
+    overflow: hidden;
+}
+
+.ah-hero-visual > img {
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    object-fit: cover;
+    object-position: center 38%;
+}
+
+.ah-photo-label {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    padding: 10px 14px;
+    border: 1px solid #ffffff91;
+    background: #ffffff99;
+    border-radius: 30px;
+    font-size: 8px;
+    letter-spacing: .14em;
+    color: #4e3658;
+    backdrop-filter: blur(12px);
+}
+
+.ah-page .ah-image-link {
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 18px;
+    background: #fffcf2e8;
+    color: var(--ah-deep);
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.45;
+    backdrop-filter: blur(10px);
+}
+
+.ah-image-link strong {
+    font-family: Georgia, serif;
+    font-size: 23px;
+    font-weight: 400;
+}
+
+.ah-circle {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #b4a0ba;
+    border-radius: 50%;
+    font-size: 22px;
+}
+
+/* =========================
+   BENEFITS
+========================= */
+
+.ah-benefits {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-bottom: 1px solid var(--ah-line);
+    padding-block: 24px;
+}
+
+.ah-benefits > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+}
+
+.ah-benefits > div + div {
+    border-left: 1px solid var(--ah-line);
+}
+
+.ah-benefits > div > span {
+    color: var(--ah-purple);
+    font-size: 27px;
+}
+
+.ah-benefits p {
+    font-size: 12px;
+    margin: 0;
+}
+
+.ah-benefits small {
+    display: block;
+    color: var(--ah-muted);
+    font-size: 10px;
+    margin-top: 2px;
+}
+
+/* =========================
+   SECTION HEADINGS
+========================= */
+
+.ah-section {
+    padding-block: 58px;
+}
+
+.ah-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 26px;
+}
+
+.ah-kicker {
+    display: block;
+    color: #92729c;
+    font-size: 9px;
+    font-weight: 650;
+    letter-spacing: .16em;
+    line-height: 1.6;
+}
+
+.ah-page h2 {
+    color: var(--ah-ink);
+    font-size: clamp(26px, 2.7vw, 38px);
+    line-height: 1.18;
+    font-weight: 400;
+    margin: 9px 0 0;
+    letter-spacing: -.035em;
+}
+
+/* =========================
+   CATEGORY CARDS
+========================= */
+
+.ah-categories {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 22px 16px;
+}
+
+.ah-category > div {
+    position: relative;
+    aspect-ratio: 3 / 3.8;
+    overflow: hidden;
+    background: #ece5e2;
+    border-radius: 15px;
+}
+
+.ah-category img {
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transition: transform .5s;
+}
+
+.ah-category:hover img {
+    transform: scale(1.05);
+}
+
+.ah-category-arrow {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    background: #fffdf6ed;
+    border-radius: 50%;
+    color: var(--ah-deep);
+}
+
+.ah-page .ah-category h3 {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-align: center;
+    margin: 12px 0 0;
+}
+
+/* =========================
+   PRODUCT GRID
+========================= */
+
+.ah-featured-band {
+    background: #f4eff6;
+    border-block: 1px solid #eee5f1;
+}
+
+.ah-products {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 28px 20px;
+}
+
+.ah-page .product-card {
+    min-width: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.ah-page .product-visual {
+    position: relative;
+    overflow: hidden;
+    border-radius: 13px;
+    background: #e9e1de;
+}
+
+.ah-page .product-photo {
+    display: block;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+}
+
+.ah-page .product-photo img {
+    height: 100%;
+    object-fit: cover;
+    transition: transform .55s;
+}
+
+.ah-page .product-card:hover .product-photo img {
+    transform: scale(1.045);
+}
+
+.ah-page .product-copy {
+    padding: 14px 2px 0;
+}
+
+.ah-page .product-copy .eyebrow {
+    color: #927c99;
+    font-size: 8px;
+    letter-spacing: .1em;
+}
+
+.ah-page .product-copy h3 {
+    margin: 6px 0 9px;
+    font-family: inherit;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 1.5;
+    letter-spacing: 0;
+}
+
+.ah-page .product-price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.ah-page .product-price-row .price {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 650;
+    color: var(--ah-ink);
+}
+
+.ah-page .price del {
+    margin-left: 6px;
+    font-size: 11px;
+    color: #948a98;
+    font-weight: 400;
+}
+
+.ah-page .product-fabric {
+    display: block;
+    font-size: 10px;
+    color: var(--ah-muted);
+    margin-top: 5px;
+}
+
+.ah-page .product-arrow {
+    font-size: 20px;
+    color: var(--ah-purple);
+}
+
+.ah-page .pill {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 6px 9px;
+    font-size: 7px;
+    letter-spacing: .09em;
+    background: #fffdf3e8;
+    border-radius: 5px;
+    color: var(--ah-deep);
+}
+
+.ah-page .card-wishlist {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    margin: 0;
+}
+
+.ah-page .card-wishlist .heart {
+    display: grid;
+    place-items: center;
+    padding: 0;
+    width: 34px;
+    height: 34px;
+    min-height: 0;
+    background: #fffdf5e8;
+    border: 0;
+    border-radius: 50%;
+    color: var(--ah-deep);
+}
+
+.ah-page .quick-view-button {
+    min-height: 38px;
+    font-size: 11px;
+}
+
+/* =========================
+   COLLECTION BANNERS
+========================= */
+
+.ah-banners {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.ah-banner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 300px;
+    background: #eee4f2;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.ah-banner:nth-child(even) {
+    background: #e9ece3;
+}
+
+.ah-banner-copy {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: column;
+    padding: 28px;
+}
+
+.ah-page .ah-banner h2 {
+    font-size: clamp(23px, 2.3vw, 33px);
+}
+
+.ah-banner p {
+    color: var(--ah-muted);
+    font-size: 12px;
+    line-height: 1.8;
+    margin: 12px 0 20px;
+}
+
+.ah-banner > img {
+    height: 100%;
+    min-height: 300px;
+    object-fit: cover;
+}
+
+.ah-banner-art {
+    display: grid;
+    place-items: center;
+    color: #a58bb0;
+    font-size: 100px;
+}
+
+/* =========================
+   AI STYLIST
+========================= */
+
+.ah-stylist {
+    display: grid;
+    grid-template-columns: .8fr 1.2fr;
+    border-radius: 22px;
+    overflow: hidden;
+    background: #ede6f3;
+    margin-top: 10px;
+}
+
+.ah-stylist-art {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 335px;
+    overflow: hidden;
+    background: #ddd0e6;
+}
+
+.ah-stylist-art > span {
+    font-size: 110px;
+    color: var(--ah-purple);
+    line-height: 1.1;
+}
+
+.ah-stylist-art > p {
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: .16em;
+    line-height: 1.9;
+    color: var(--ah-deep);
+    z-index: 1;
+}
+
+.ah-orbit {
+    width: 265px;
+    height: 265px;
+    border: 1px solid #faf4ffb8;
+    border-radius: 50%;
+    position: absolute;
+    transform: rotate(-28deg) scaleX(.78);
+}
+
+.ah-orbit::after {
+    content: '';
+    position: absolute;
+    inset: -32px;
+    border: 1px solid #faf4ff94;
+    border-radius: 50%;
+}
+
+.ah-stylist-copy {
+    padding: 42px;
+}
+
+.ah-stylist-copy > p {
+    font-size: 13px;
+    line-height: 1.8;
+    max-width: 430px;
+    color: var(--ah-muted);
+    margin: 18px 0 24px;
+}
+
+.ah-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* =========================
+   BRAND STORY
+========================= */
+
+.ah-story {
+    text-align: center;
+    padding-block: 65px;
+}
+
+.ah-story .ah-text-link {
+    margin-top: 24px;
+}
+
+/* =========================
+   FLOATING STYLIST
+========================= */
+
+.ah-page .ah-floating {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    border: 1px solid #ffffff50;
+    background: var(--ah-deep);
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 40px;
+    box-shadow: 0 6px 25px #42264e26;
+    font-size: 11px;
+}
+
+.ah-floating > span:first-child {
+    font-size: 24px;
+    line-height: 1;
+}
+
+/* =========================
+   HOMEPAGE HEADER
+========================= */
+
+body:has(.ah-page) .announcement {
+    padding: 7px 12px;
+    background: #4b3158;
+    color: #fff;
+    font-size: 10px;
+}
+
+body:has(.ah-page) .header-inner {
+    min-height: 82px;
+}
+
+body:has(.ah-page) .search-strip {
+    padding-block: 10px;
+    background: #fff;
+}
+
+body:has(.ah-page) .search-strip form {
+    border: 1px solid #e7dfeb;
+    border-radius: 8px;
+    padding: 3px 8px 3px 14px;
+    background: #faf7fc;
+}
+
+body:has(.ah-page) .search-strip input {
+    background: transparent;
+}
+
+/* TOUCH DEVICES */
+
+@media (hover: none) {
+    .ah-page .quick-view-button {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* LARGE DESKTOP */
+
+@media (min-width: 1440px) {
+    .ah-hero-copy {
+        padding-inline: 48px;
+    }
+}
+
+/* TABLET */
+
+@media (max-width: 1000px) {
+    .ah-wrap {
+        width: calc(100% - 40px);
+    }
+
+    .ah-hero {
+        grid-template-columns: 1fr 1.15fr;
+        min-height: 440px;
+    }
+
+    .ah-hero-copy {
+        padding: 28px;
+    }
+
+    .ah-hero-visual {
+        min-height: 440px;
+    }
+
+    .ah-page .ah-hero h1 {
+        font-size: 38px;
+    }
+
+    .ah-categories {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .ah-products {
+        gap: 22px 14px;
+    }
+
+    .ah-banners {
+        gap: 16px;
+    }
+
+    .ah-banner-copy {
+        padding: 20px;
+    }
+
+    .ah-page .ah-banner h2 {
+        font-size: 25px;
+    }
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+    .ah-wrap {
+        width: calc(100% - 28px);
+    }
+
+    .ah-page .ah-category-nav {
+        padding-block: 14px;
+        gap: 20px;
+        font-size: 11px;
+    }
+
+    .ah-hero {
+        display: flex;
+        flex-direction: column-reverse;
+        border-radius: 17px;
+    }
+
+    .ah-hero-visual {
+        min-height: 340px;
+    }
+
+    .ah-hero-visual > img {
+        object-position: center 30%;
+    }
+
+    .ah-photo-label {
+        top: 14px;
+        right: 14px;
+        font-size: 7px;
+    }
+
+    .ah-page .ah-image-link {
+        bottom: 14px;
+        left: 14px;
+        right: 14px;
+        padding: 10px 14px;
+    }
+
+    .ah-image-link strong {
+        font-size: 20px;
+    }
+
+    .ah-hero-copy {
+        padding: 27px 24px 22px;
+    }
+
+    .ah-page .ah-hero h1 {
+        font-size: 36px;
+        margin: 17px 0 12px;
+    }
+
+    .ah-hero-copy > p {
+        max-width: 100%;
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+
+    .ah-hero-bottom {
+        padding-top: 25px;
+        gap: 10px;
+        font-size: 7px;
+    }
+
+    .ah-benefits {
+        padding-block: 18px;
+        gap: 8px;
+    }
+
+    .ah-benefits > div {
+        gap: 5px;
+        text-align: center;
+        flex-direction: column;
+    }
+
+    .ah-benefits > div > span {
+        font-size: 21px;
+    }
+
+    .ah-benefits p {
+        font-size: 9px;
+    }
+
+    .ah-benefits small {
+        display: none;
+    }
+
+    .ah-section {
+        padding-block: 36px;
+    }
+
+    .ah-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+        margin-bottom: 22px;
+    }
+
+    .ah-page h2 {
+        font-size: 29px;
+    }
+
+    .ah-categories {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px 10px;
+    }
+
+    .ah-category > div {
+        border-radius: 11px;
+    }
+
+    .ah-page .ah-category h3 {
+        font-size: 10px;
+        line-height: 1.5;
+        margin-top: 8px;
+    }
+
+    .ah-category-arrow {
+        width: 24px;
+        height: 24px;
+        bottom: 7px;
+        right: 7px;
+    }
+
+    .ah-products {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 25px 12px;
+    }
+
+    .ah-page .product-copy h3 {
+        font-size: 12px;
+    }
+
+    .ah-page .product-price-row .price {
+        font-size: 13px;
+    }
+
+    .ah-page .price del {
+        font-size: 10px;
+        margin-left: 3px;
+    }
+
+    .ah-page .product-visual {
+        border-radius: 10px;
+    }
+
+    .ah-page .pill {
+        top: 9px;
+        left: 8px;
+        padding: 5px 6px;
+        font-size: 6px;
+    }
+
+    .ah-page .card-wishlist {
+        top: 7px;
+        right: 7px;
+    }
+
+    .ah-page .card-wishlist .heart {
+        width: 28px;
+        height: 28px;
+    }
+
+    .ah-page .product-fabric {
+        font-size: 9px;
+    }
+
+    .ah-banners {
+        grid-template-columns: 1fr;
+    }
+
+    .ah-banner {
+        min-height: 265px;
+    }
+
+    .ah-banner > img {
+        min-height: 265px;
+    }
+
+    .ah-stylist {
+        grid-template-columns: 1fr;
+    }
+
+    .ah-stylist-art {
+        min-height: 210px;
+    }
+
+    .ah-stylist-art > span {
+        font-size: 75px;
+    }
+
+    .ah-orbit {
+        width: 180px;
+        height: 180px;
+    }
+
+    .ah-stylist-copy {
+        padding: 28px 24px;
+    }
+
+    .ah-actions {
+        gap: 18px;
+    }
+
+    .ah-story {
+        padding-block: 44px;
+    }
+
+    .ah-page .ah-floating {
+        bottom: 16px;
+        right: 14px;
+        padding: 11px 14px;
+        font-size: 10px;
+    }
+}
+
+/* ACCESSIBILITY */
+
+@media (prefers-reduced-motion: reduce) {
+    .ah-page *,
+    .ah-page *::before,
+    .ah-page *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}

@@ -1,0 +1,126 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Cart | Aarohi Boutique
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="container contextual-agent">
+        <a href="{% url 'assistant' %}?agent=cart">
+            ✧ Let the cart agent check options & coupons →
+        </a>
+    </div>
+    <div class="container section">
+        <div class="page-heading">
+            <span class="eyebrow">
+                A LITTLE SOMETHING FOR YOU
+            </span>
+            <h1>
+                Your shopping bag
+            </h1>
+        </div>
+        {% if lines %}
+            <div class="checkout-layout">
+                <section>
+                    <div class="shipping-progress">
+                        {% if shipping_remaining %}
+                            <p>
+                                You are ₹{{ shipping_remaining }} away from free shipping.
+                            </p>
+                        {% else %}
+                            <p>
+                                Your bag qualifies for free shipping.
+                            </p>
+                        {% endif %}
+                        <progress value="{{ shipping_progress }}" max="100" aria-label="Progress towards free shipping">
+                        </progress>
+                    </div>
+                    <div class="bag-items">
+                        {% for line in lines %}
+                            <article class="bag-item panel">
+                                {% if line.variant.product.image %}
+                                    <img src="{{ line.variant.product.image.url }}" alt="{{ line.variant.product.name }}">
+                                {% endif %}
+                                <div>
+                                    <h2>
+                                        {{ line.variant.product.name }}
+                                    </h2>
+                                    <p>
+                                        {{ line.variant.size }} · {{ line.variant.colour }}
+                                    </p>
+                                    <p>
+                                        ₹{{ line.variant.product.price }}
+                                    </p>
+                                    <form method="post" class="inline-form">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="variant" value="{{ line.variant.pk }}">
+                                        <label>
+                                            Quantity
+                                            <input name="quantity" type="number" min="0" max="10" value="{{ line.quantity }}">
+                                        </label>
+                                        <button class="secondary">
+                                            Update
+                                        </button>
+                                    </form>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="variant" value="{{ line.variant.pk }}">
+                                        <input type="hidden" name="quantity" value="0">
+                                        <button class="text-button">
+                                            Remove
+                                        </button>
+                                    </form>
+                                </div>
+                                <strong>
+                                    ₹{{ line.total }}
+                                </strong>
+                            </article>
+                        {% endfor %}
+                    </div>
+                    <form method="post" class="coupon-box panel">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="coupon">
+                        <label for="coupon">
+                            Have a coupon?
+                        </label>
+                        <div class="inline-form">
+                            <input id="coupon" name="code" placeholder="Coupon code" value="{{ request.session.coupon }}">
+                            <button>
+                                Apply
+                            </button>
+                        </div>
+                        <p class="muted">
+                            Leave the code blank and apply to remove a coupon.
+                        </p>
+                    </form>
+                </section>
+                <div>
+                    {% include "shop/_summary.html" %}
+                    <a href="{% url 'checkout' %}" class="button full-width checkout-button">
+                        Proceed to checkout →
+                    </a>
+                    <a class="clear-link" href="{% url 'shop' %}">
+                        Continue shopping
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <span class="empty-icon">
+                    ♧
+                </span>
+                <h2>
+                    Your bag is waiting for something lovely
+                </h2>
+                <p>
+                    Explore our curated collections and find your favourites.
+                </p>
+                <a class="button" href="{% url 'shop' %}">
+                    Start exploring
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

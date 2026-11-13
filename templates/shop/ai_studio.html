@@ -1,0 +1,187 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Visual shopping studio | Aarohi
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/ai_studio.css' %}">
+{% endblock %}
+{% block content %}
+    <section class="container section">
+        <div class="studio-heading">
+            <span class="eyebrow">
+                SEE IT. FIND IT. MAKE IT YOURS.
+            </span>
+            <h1>
+                A more personal
+                <br>
+                <em>
+                    way to discover.
+                </em>
+            </h1>
+            <p>
+                Search with a picture, explore a new silhouette, or simply ask your stylist.
+            </p>
+        </div>
+        <div class="visual-studio-grid">
+            <form method="post" enctype="multipart/form-data" class="panel upload-panel">
+                {% csrf_token %}
+                <span class="studio-icon">
+                    ↗
+                </span>
+                <h2>
+                    Find a look you love
+                </h2>
+                <label class="consent-check"><input type="checkbox" name="vision_consent" value="1"> I consent to sending this garment photo to Google Gemini when using vision mode.</label>
+                    <p>
+                    Upload a garment inspiration photo and explore similar catalogue styles.
+                </p>
+                <label>
+                    Garment photo
+                    <input type="file" name="image" accept="image/jpeg,image/png,image/webp" required>
+                </label>
+                <label>
+                    Search method
+                    <select name="mode">
+                        <option value="colour">
+                            Local colour similarity — no model needed
+                        </option>
+                        <option value="vision">
+                            Gemini vision model + catalogue matching
+                        </option>
+                    </select>
+                </label>
+                <button class="full-width">
+                    Discover similar styles
+                </button>
+                <small>
+                    Max 5 MB. Source photo is processed in memory and is not saved to public media. Vision mode sends the uploaded image to Google Gemini. Submit only photos you have permission to share.
+                </small>
+            </form>
+            <form action="{% url 'start_tryon' %}" method="post" enctype="multipart/form-data" class="panel upload-panel">
+                {% csrf_token %}
+                <span class="studio-icon">
+                    ✧
+                </span>
+                <h2>
+                    Picture your next look
+                </h2>
+                <p>
+                    A generated visual preview of a selected garment. This does not measure fit or guarantee the result.
+                </p>
+                <label>
+                    Choose a garment
+                    <select name="product" required>
+                        {% for product in products %}
+                            <option value="{{ product.pk }}">
+                                {{ product.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>
+                    Your photo
+                    <input type="file" name="person" accept="image/jpeg,image/png,image/webp" required>
+                </label>
+                <label class="consent-check">
+                    <input type="checkbox" name="photo_consent" required>
+                    I am an adult using my own photo or a photo I have permission to use. I consent to sending it to the configured FASHN provider for this preview.
+                </label>
+                {% if tryon_configured %}
+                    <button class="full-width">
+                        Generate virtual try-on
+                    </button>
+                {% else %}
+                    <button class="full-width" disabled>
+                        Try-on provider setup required
+                    </button>
+                {% endif %}
+                <small>
+                    Private output. Max 3 submissions per day. Provider usage may be billed to the store. Text chat alone does not generate try-on images.
+                </small>
+            </form>
+        </div>
+        {% if method %}
+            <section class="section">
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">
+                            YOUR DISCOVERY EDIT
+                        </span>
+                        <h2>
+                            Inspired by your photo
+                        </h2>
+                        <p>
+                            {{ method }}
+                        </p>
+                        {% if vision_query %}
+                            <small>
+                                Visible garment keywords: {{ vision_query }}
+                            </small>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="studio-results">
+                    {% for match in matches %}
+                        <a class="studio-result" href="{{ match.url }}">
+                            {% if match.image %}
+                                <img src="{{ match.image }}" alt="{{ match.name }}">
+                            {% endif %}
+                            <h3>
+                                {{ match.name }}
+                            </h3>
+                            <strong>
+                                ₹{{ match.price_inr }}
+                            </strong>
+                        </a>
+                    {% empty %}
+                        <p>
+                            No catalogue matches yet.
+                        </p>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+        <section class="section">
+            <h2>
+                Your private previews
+            </h2>
+            <div class="studio-results">
+                {% for preview in tryons %}
+                    <article class="panel">
+                        <h3>
+                            {{ preview.product.name }}
+                        </h3>
+                        <span class="badge">
+                            {{ preview.status }}
+                        </span>
+                        {% if preview.status == 'completed' %}
+                            <img src="{% url 'tryon_image' preview.pk %}" alt="Your generated virtual garment preview">
+                        {% endif %}
+                        <p>
+                            {{ preview.error }}
+                        </p>
+                        {% if preview.status == 'processing' %}
+                            <form action="{% url 'poll_tryon' preview.pk %}" method="post">
+                                {% csrf_token %}
+                                <button class="secondary">
+                                    Refresh status
+                                </button>
+                            </form>
+                        {% endif %}
+                        <form action="{% url 'delete_tryon' preview.pk %}" method="post">
+                            {% csrf_token %}
+                            <button class="text-button">
+                                Delete saved preview
+                            </button>
+                        </form>
+                    </article>
+                {% empty %}
+                    <div class="empty-state">
+                        Your generated previews appear here when a provider is configured.
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </section>
+{% endblock %}

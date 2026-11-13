@@ -1,0 +1,80 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Notifications & preferences | Aarohi
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/notifications.css' %}">
+{% endblock %}
+{% block content %}
+    <section class="container section">
+        <h1>
+            Your updates, in one place
+        </h1>
+        <div class="two-columns">
+            <section>
+                {% for note in notifications %}
+                    <article class="panel">
+                        <span class="badge">
+                            {% if note.read %}
+                                Read
+                            {% else %}
+                                New
+                            {% endif %}
+                        </span>
+                        <h2>
+                            {{ note.subject }}
+                        </h2>
+                        <p>
+                            {{ note.body }}
+                        </p>
+                        <small>
+                            {{ note.created|date:'d M Y, h:i A' }} · Email {{ note.email_state }}
+                        </small>
+                        {% if note.order %}
+                            <a class="button secondary" href="{% url 'order' note.order.pk %}">
+                                Open order
+                            </a>
+                        {% endif %}
+                        {% if not note.read %}
+                            <form method="post">
+                                {% csrf_token %}
+                                <button name="read" value="{{ note.pk }}" class="text-button">
+                                    Mark as read
+                                </button>
+                            </form>
+                        {% endif %}
+                    </article>
+                {% empty %}
+                    <div class="empty-state">
+                        Order updates appear here when automation processes them.
+                    </div>
+                {% endfor %}
+            </section>
+            <form method="post" class="panel">
+                {% csrf_token %}
+                <h2>
+                    Notification preferences
+                </h2>
+                <label class="checkbox">
+                    <input type="checkbox" name="email_updates" {% if preferences.email_updates %}checked{% endif %}>
+                    Email updates
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" name="review_requests" {% if preferences.review_requests %}checked{% endif %}>
+                    Ask for a product review after delivery
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" name="marketing_opt_in" {% if preferences.marketing_opt_in %}checked{% endif %}>
+                    Remind me about abandoned shopping bags
+                </label>
+                <button name="save_preferences" value="1">
+                    Save preferences
+                </button>
+                <p class="muted">
+                    In-app order records remain available. Cart recovery is opt-in. Demo notification mode sends no external email.
+                </p>
+            </form>
+        </div>
+    </section>
+{% endblock %}

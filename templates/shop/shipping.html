@@ -1,0 +1,32 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Shipping | Aarohi Boutique
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/shipping.css' %}">
+{% endblock %}
+{% block content %}
+    <section class="container section narrow">
+        <span class="eyebrow">
+            AAROHI BOUTIQUE
+        </span>
+        <h1>
+            Shipping & delivery
+        </h1>
+        <article class="panel prose">
+            <h2>
+                Delivery within India
+            </h2>
+            <p>
+                Shipping charges are calculated at checkout. Standard dispatch and delivery normally take 4–7 business days. Actual timing depends on location and stock. The store confirms PIN serviceability before dispatch.
+            </p>
+            <h2>
+                Track your parcel
+            </h2>
+            <p>
+                Sign in to My Account and open your order. Courier details and tracking reference appear after dispatch. Courier website tracking opens through the supplied tracking link.
+            </p>
+        </article>
+    </section>
+{% endblock %}

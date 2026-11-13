@@ -1,0 +1,14 @@
+AAROHI AUTONOMOUS V4 — FULL PROJECT
+
+1. ZIP-ai new folder-la extract pannunga. Existing db.sqlite3, media, private .env backup eduthukkonga.
+2. SETUP_V4.md-la complete Windows / Linux commands irukku. START_WINDOWS.bat use pannalam.
+3. .env.example -> .env copy pannunga. Default local sandbox. Real Gemini-ku AI_MODE=gemini, GEMINI_API_KEY=unga private key set pannunga; restart pannunga.
+4. Existing admin login preserved. New default admin/password add pannala. Password maranthaal python manage.py changepassword YOUR_USERNAME.
+5. Website http://127.0.0.1:8001/ . Worker separate terminal-la run aaganum: python manage.py run_agents --watch.
+6. 12 Admin + 6 Customer agents public picker-la irukku. Gemini + LangGraph real tools execute pannum. Routine authorization checkbox enabled iruntha requested bag/description/SEO/campaign draft changes execute aagum.
+7. Customer address save pannitu 'Order 2 silk sarees' kelunga. Product/colour/size choose pannunga. Review checkout link-la approve pannina pending order create aagum. Payment customer secure page-la authorize pannanum.
+8. Tamil, English, Tanglish text / browser voice available. Voice quality browser / OS depend aagum. Local sandbox free-form AI illa.
+9. API key ZIP-la include pannala. Unga old .env-la irukkura key private-ah restore pannunga.
+10. Real payment, courier, email, try-on separate credentials/setup thevai. Gemini live workflow verify panniyachu. Matha live integrations verify pannala. INTEGRATIONS_V4.md paarunga.
+
+114 automated tests pass. Existing uploaded business data preserve pannirukkom. Full details TEST_REPORT.md.

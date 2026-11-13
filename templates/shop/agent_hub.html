@@ -1,0 +1,59 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    The Aarohi Agent Studio
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/agent_hub.css' %}">
+{% endblock %}
+{% block content %}
+    <section class="container section">
+        <div class="studio-heading">
+            <span class="eyebrow">
+                A LITTLE INTELLIGENCE. A LOT OF POSSIBILITY.
+            </span>
+            <h1>
+                Your boutique.
+                <br>
+                <em>
+                    Working smarter.
+                </em>
+            </h1>
+            <p>
+                Personal shopping for you. Connected operations for your business.
+            </p>
+        </div>
+        <p class="panel">Explore your wardrobe visually: <a href="{% url 'ai_studio' %}">Visual Search &amp; Virtual Try-On ↗</a></p>
+        <p>6 customer agents{% if is_store_staff %} · 12 admin agents{% endif %} · Validated tools · Reviewed checkout</p>
+        <div class="agent-hub-grid">
+            {% for name, description, destination, key in capabilities %}
+                <article class="agent-hub-card">
+                    <span class="agent-number">
+                        {{ forloop.counter|stringformat:'02d' }}
+                    </span>
+                    <h2>
+                        {{ name }}
+                    </h2>
+                    <p>
+                        {{ description }}
+                    </p>
+                    {% if destination == 'intelligence' or key == 'content' %}
+                        {% if is_store_staff %}
+                            <a href="{% url destination %}{% if key %}?{% if destination == 'intelligence' %}report{% else %}agent{% endif %}={{ key }}{% endif %}">
+                                Open workspace ↗
+                            </a>
+                        {% else %}
+                            <span class="muted">
+                                Store management
+                            </span>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url destination %}{% if key %}?agent={{ key }}{% endif %}">
+                            Explore ↗
+                        </a>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Payment | Aarohi Boutique
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/payment.css' %}">
+{% endblock %}
+{% block scripts %}
+    {% if order.payment_mode == "cashfree" %}
+    <script src="https://sdk.cashfree.com/js/v3/cashfree.js" defer></script>
+    {% else %}
+    <script src="https://checkout.razorpay.com/v1/checkout.js" defer>
+    </script>
+    {% endif %}
+    <script src="{% static 'js/payment.js' %}?v=2" defer>
+    </script>
+{% endblock %}
+{% block content %}
+    <div class="container contextual-agent">
+        <a href="{% url 'assistant' %}?agent=payments">
+            ✧ Ask the payment assistance agent →
+        </a>
+    </div>
+    <section class="container section payment-wrap">
+        <div class="panel payment-panel">
+            <span class="eyebrow">
+                SECURE CHECKOUT
+            </span>
+            <h1>
+                Complete your payment
+            </h1>
+            <p>
+                Order <span class="order-id">{{ order.number }}</span>
+            </p>
+            <div class="amount">
+                ₹{{ order.total }}
+            </div>
+            <p>
+                Reserved until {{ order.expires_at|date:'d M, h:i A' }}. Do not pay twice if confirmation is delayed.
+            </p>
+            {% if order.payment_mode == "demo" %}
+                <div class="message">
+                    LOCAL DEMO — no money is collected. Set PAYMENT_MODE=cashfree or razorpay for gateway checkout.
+                </div>
+                <form method="post" action="{% url 'demo_payment' order.pk %}">
+                    {% csrf_token %}
+                    <button name="result" value="success" class="full-width">
+                        Simulate successful payment
+                    </button>
+                    <button name="result" value="failed" class="secondary full-width">
+                        Simulate failed payment
+                    </button>
+                </form>
+            {% elif order.payment_mode == "cashfree" and cashfree_session %}
+                {% if cashfree_mode == "sandbox" %}
+                <div class="message test-mode-note">
+                    <strong>Cashfree TEST MODE</strong> — no real money moves. After you choose a payment method,
+                    Cashfree opens its <em>simulator</em> page where you pick SUCCESS or FAILED (OTP is shown on that page).
+                    Test card numbers and UPI IDs are listed on Cashfree's "Test data" docs page.
+                    With live (production) keys the same button opens the real bank / UPI app flow.
+                </div>
+                {% endif %}
+                <div id="cashfree-config" data-session="{{ cashfree_session }}" data-mode="{{ cashfree_mode }}"></div>
+                <button id="cashfree-pay" class="full-width" type="button">
+                    Pay ₹{{ order.total }} securely with Cashfree
+                </button>
+                <p class="muted">UPI · Cards · Netbanking · Wallets</p>
+                <p id="payment-message" aria-live="polite"></p>
+            {% elif gateway_id %}
+                <div id="gateway-config" data-key="{{ key_id }}" data-order="{{ gateway_id }}" data-amount="{{ order.total }}" data-name="{{ store.name }}" data-email="{{ order.email }}" data-phone="{{ order.phone }}">
+                </div>
+                <button id="pay-button" class="full-width">
+                    Pay securely with Razorpay
+                </button>
+                <p class="muted">
+                    UPI · Cards · Netbanking · Wallets. Available methods depend on your gateway account.
+                </p>
+                <form id="payment-result" action="{% url 'payment_verify' order.pk %}" method="post" hidden>
+                    {% csrf_token %}
+                    <input name="razorpay_payment_id">
+                    <input name="razorpay_order_id">
+                    <input name="razorpay_signature">
+                </form>
+                <p id="payment-message" aria-live="polite">
+                </p>
+            {% else %}
+                <p>
+                    The gateway is temporarily unavailable. Retry this page or contact support.
+                </p>
+                <a href="" class="button secondary">
+                    Retry
+                </a>
+            {% endif %}
+            <a class="clear-link" href="{% url 'order' order.pk %}">
+                View order status
+            </a>
+        </div>
+    </section>
+{% endblock %}

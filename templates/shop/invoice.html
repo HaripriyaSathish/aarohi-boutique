@@ -1,0 +1,93 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Invoice | Aarohi Boutique
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/invoice.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="container section narrow invoice">
+        <p><a class="button" href="?format=pdf">Download invoice PDF ↗</a></p>
+        <div class="panel">
+            <span class="eyebrow">
+                ORDER RECEIPT
+            </span>
+            <h1>
+                {{ store.name }}
+            </h1>
+            <p>
+                {{ store.address|linebreaksbr }}
+            </p>
+            <p>
+                {{ store.email }}
+            </p>
+            <hr>
+            <h2>
+                {{ order.number }}
+            </h2>
+            <p>
+                {{ order.created|date:'d M Y' }} · {{ order.get_payment_status_display }}
+            </p>
+            <p>
+                {{ order.shipping_address|linebreaksbr }}
+            </p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                Item
+                            </th>
+                            <th>
+                                Quantity
+                            </th>
+                            <th>
+                                Amount
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items.all %}
+                            <tr>
+                                <td>
+                                    {{ item.name }}
+                                    <small>
+                                        {{ item.size }} / {{ item.colour }}
+                                    </small>
+                                </td>
+                                <td>
+                                    {{ item.quantity }}
+                                </td>
+                                <td>
+                                    ₹{{ item.total }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <p>
+                Subtotal: ₹{{ order.subtotal }}
+            </p>
+            <p>
+                Discount: −₹{{ order.discount }}
+            </p>
+            <p>
+                Shipping: ₹{{ order.shipping }}
+            </p>
+            <h2>
+                Total: ₹{{ order.total }}
+            </h2>
+            <p>
+                Payment reference: {{ order.provider_payment|default:'Pending' }}
+            </p>
+            <p class="muted">
+                Order receipt. Configure business tax details and GST-compliant invoicing before issuing a tax invoice.
+            </p>
+            <button class="print-button">
+                Print / Save as PDF
+            </button>
+        </div>
+    </div>
+{% endblock %}

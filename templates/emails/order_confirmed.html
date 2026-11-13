@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Order confirmed</title></head>
+<body style="margin:0;padding:0;background:#efe6f7;font-family:Arial,Helvetica,sans-serif;color:#2b2233;">
+<div style="display:none;max-height:0;overflow:hidden;">Yay! Order {{ order.number }} is confirmed — {{ items|length }} item{{ items|length|pluralize }}, total &#8377;{{ order.total }}. Your invoice is attached.</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#efe6f7;padding:26px 10px;">
+<tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:620px;background:#ffffff;border-radius:22px;overflow:hidden;box-shadow:0 14px 40px rgba(59,31,79,.16);">
+
+  <!-- Brand bar -->
+  <tr><td style="background:#2b1638;padding:14px 28px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="font-family:Georgia,'Times New Roman',serif;font-size:22px;color:#ffffff;">&#10023; {{ store_name }}</td>
+      <td align="right" style="font-size:11px;letter-spacing:2px;color:#c8a165;font-weight:bold;">ORDER CONFIRMED</td>
+    </tr></table>
+  </td></tr>
+
+  <!-- Celebration hero -->
+  <tr><td align="center" style="background:#653a88;background-image:linear-gradient(135deg,#3b1f4f 0%,#653a88 55%,#9d78c4 100%);padding:44px 30px 40px;">
+    <div style="font-size:15px;letter-spacing:6px;color:#f4d9a6;">&#10022; &#10023; &#10022;</div>
+    <div style="width:74px;height:74px;line-height:74px;margin:16px auto 18px;border-radius:50%;background:#ffffff;color:#2f8a57;font-size:40px;font-weight:bold;box-shadow:0 0 0 8px rgba(255,255,255,.18);">&#10003;</div>
+    <h1 style="margin:0;font-family:Georgia,'Times New Roman',serif;font-weight:normal;font-size:34px;line-height:1.2;color:#ffffff;">Thank you, {{ name }}!</h1>
+    <p style="margin:12px 0 0;font-size:17px;line-height:1.6;color:#efe3fa;">Your order is confirmed and our team is lovingly preparing it for you.</p>
+    <table role="presentation" cellpadding="0" cellspacing="0" style="margin:22px auto 0;"><tr>
+      <td style="background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:10px 22px;font-size:15px;letter-spacing:2px;color:#ffffff;font-weight:bold;">ORDER {{ order.number }}</td>
+    </tr></table>
+  </td></tr>
+  <tr><td style="height:5px;background:#c8a165;background-image:linear-gradient(90deg,#c8a165,#f4d9a6,#c8a165);font-size:0;line-height:0;">&nbsp;</td></tr>
+
+  <!-- Progress tracker -->
+  <tr><td style="padding:28px 28px 8px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+      {% for step in steps %}
+      <td align="center" width="25%" style="vertical-align:top;">
+        <div style="width:34px;height:34px;line-height:34px;margin:0 auto;border-radius:50%;font-size:15px;font-weight:bold;{% if step.done %}background:#653a88;color:#ffffff;{% else %}background:#f1e9f9;color:#9d78c4;border:1px dashed #c5ade0;line-height:32px;{% endif %}">{% if step.done %}&#10003;{% else %}{{ forloop.counter }}{% endif %}</div>
+        <div style="margin-top:8px;font-size:13px;font-weight:bold;color:{% if step.done %}#3b1f4f{% else %}#9a90a3{% endif %};">{{ step.label }}</div>
+      </td>
+      {% endfor %}
+    </tr></table>
+  </td></tr>
+
+  <!-- Items -->
+  <tr><td style="padding:4px 28px 0;">
+    <p style="margin:0 0 12px;font-size:12px;letter-spacing:2.5px;color:#7f52a8;font-weight:bold;">YOUR PIECES</p>
+    {% for item in items %}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px;background:#faf6fd;border:1px solid #ece3f5;border-radius:16px;">
+      <tr>
+        <td width="96" style="padding:12px;">
+          {% if item.cid %}<img src="cid:{{ item.cid }}" width="84" height="104" alt="{{ item.name }}" style="display:block;width:84px;height:104px;object-fit:cover;border-radius:12px;">
+          {% else %}<div style="width:84px;height:104px;border-radius:12px;background:#e2d4f1;text-align:center;line-height:104px;font-size:28px;color:#9d78c4;">&#10023;</div>{% endif %}
+        </td>
+        <td style="padding:12px 6px;vertical-align:middle;">
+          <div style="font-family:Georgia,'Times New Roman',serif;font-size:19px;color:#2b1638;">{{ item.name }}</div>
+          <div style="margin-top:6px;font-size:13.5px;color:#7a7084;">Size <strong style="color:#4e2a69;">{{ item.size }}</strong> &nbsp;&middot;&nbsp; {{ item.colour }} &nbsp;&middot;&nbsp; Qty {{ item.quantity }}</div>
+        </td>
+        <td align="right" style="padding:12px 16px;vertical-align:middle;font-size:17px;font-weight:bold;color:#4e2a69;white-space:nowrap;">&#8377;{{ item.total }}</td>
+      </tr>
+    </table>
+    {% endfor %}
+  </td></tr>
+
+  <!-- Totals -->
+  <tr><td style="padding:6px 28px 0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-radius:16px;overflow:hidden;border:1px solid #ece3f5;">
+      <tr><td style="padding:12px 18px 4px;font-size:14.5px;color:#7a7084;">Subtotal</td><td align="right" style="padding:12px 18px 4px;font-size:14.5px;">&#8377;{{ order.subtotal }}</td></tr>
+      {% if order.discount %}<tr><td style="padding:4px 18px;font-size:14.5px;color:#7a7084;">Discount{% if order.coupon %} ({{ order.coupon.code }}){% endif %}</td><td align="right" style="padding:4px 18px;font-size:14.5px;color:#2f8a57;">&minus;&#8377;{{ order.discount }}</td></tr>{% endif %}
+      <tr><td style="padding:4px 18px 12px;font-size:14.5px;color:#7a7084;">Delivery</td><td align="right" style="padding:4px 18px 12px;font-size:14.5px;">{% if order.shipping %}&#8377;{{ order.shipping }}{% else %}<span style="color:#2f8a57;font-weight:bold;">FREE</span>{% endif %}</td></tr>
+      <tr><td style="background:#2b1638;padding:16px 18px;font-size:15px;letter-spacing:1.5px;color:#f4d9a6;font-weight:bold;">TOTAL PAID</td><td align="right" style="background:#2b1638;padding:16px 18px;font-size:22px;color:#ffffff;font-weight:bold;">&#8377;{{ order.total }}</td></tr>
+    </table>
+  </td></tr>
+
+  <!-- Info cards -->
+  <tr><td style="padding:18px 28px 0;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td width="50%" style="vertical-align:top;padding-right:6px;">
+        <div style="background:#faf6fd;border-radius:14px;padding:16px;border:1px solid #ece3f5;">
+          <div style="font-size:11.5px;letter-spacing:2px;color:#7f52a8;font-weight:bold;">&#128666; DELIVERING TO</div>
+          <div style="margin-top:8px;font-size:14px;line-height:1.6;color:#2b2233;">{{ order.shipping_address|linebreaksbr }}</div>
+        </div>
+      </td>
+      <td width="50%" style="vertical-align:top;padding-left:6px;">
+        <div style="background:#faf6fd;border-radius:14px;padding:16px;border:1px solid #ece3f5;">
+          <div style="font-size:11.5px;letter-spacing:2px;color:#7f52a8;font-weight:bold;">&#128179; PAYMENT</div>
+          <div style="margin-top:8px;font-size:14px;line-height:1.6;color:#2b2233;">Paid via {{ payment_label }}<br><span style="color:#7a7084;font-size:12.5px;">{{ order.created|date:"d M Y, h:i A" }}</span></div>
+        </div>
+      </td>
+    </tr></table>
+  </td></tr>
+
+  <!-- Invoice note + CTAs -->
+  <tr><td style="padding:20px 28px 0;">
+    <div style="background:#fff8ec;border:1px dashed #c8a165;border-radius:14px;padding:14px 16px;font-size:14px;color:#6b4e1f;">&#128206; Your colour invoice <strong>{{ order.number }}.pdf</strong> is attached to this email.</div>
+  </td></tr>
+  <tr><td align="center" style="padding:26px 28px 8px;">
+    <a href="{{ track_url }}" style="display:inline-block;background:#4e2a69;background-image:linear-gradient(120deg,#3b1f4f,#653a88);color:#ffffff;text-decoration:none;font-size:16px;font-weight:bold;padding:16px 34px;border-radius:12px;">Track your order &rarr;</a>
+    <div style="margin-top:14px;"><a href="{{ shop_url }}" style="color:#653a88;font-size:14.5px;font-weight:bold;text-decoration:none;">Continue shopping &#10023;</a></div>
+  </td></tr>
+
+  <!-- What's next -->
+  <tr><td style="padding:22px 28px 6px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f1e9f9;border-radius:16px;"><tr><td style="padding:18px 20px;">
+      <div style="font-family:Georgia,'Times New Roman',serif;font-size:18px;color:#2b1638;">What happens next?</div>
+      <div style="margin-top:8px;font-size:14px;line-height:1.8;color:#4a4152;">
+        &#10022; We hand-check and pack your pieces.<br>
+        &#10022; You get an email with courier tracking once shipped.<br>
+        &#10022; Need a different size? Easy returns &amp; exchanges within {{ return_days }} days of delivery.
+      </div>
+    </td></tr></table>
+  </td></tr>
+
+  <!-- Footer -->
+  <tr><td align="center" style="padding:24px 28px 30px;font-size:12.5px;line-height:1.8;color:#9a90a3;">
+    Questions? Just reply to this email or chat with <strong style="color:#653a88;">Aarohi AI</strong> on our website.<br>
+    &copy; {{ store_name }} &middot; Women&rsquo;s wear, beautifully curated
+  </td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>

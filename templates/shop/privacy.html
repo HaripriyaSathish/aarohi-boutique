@@ -1,0 +1,35 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Privacy | Aarohi Boutique
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/privacy.css' %}">
+{% endblock %}
+{% block content %}
+    <section class="container section narrow">
+        <span class="eyebrow">
+            AAROHI BOUTIQUE
+        </span>
+        <h1>
+            Privacy policy
+        </h1>
+        <article class="panel prose">
+            <h2>
+                Your information
+            </h2>
+            <p>
+                We use your account details, delivery address and order history to operate the store and fulfill orders. Payment details are entered with the gateway; this website does not store card credentials.
+            </p>
+            <h2>
+                Cookies and requests
+            </h2>
+            <p>
+                Essential session cookies support sign-in, shopping bags and security. Contact the store to request access, correction or deletion of personal information, subject to record-retention requirements.
+            </p>
+            <p>
+                This is a starter policy. The store owner must review it for the actual business and providers before launch.
+            </p>
+        </article>
+    </section>
+{% endblock %}

@@ -1,0 +1,343 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="{% block meta_description %}Discover beautiful women's clothing at {{ store.name|default:'Aarohi Boutique' }}.{% endblock %}">
+        <title>
+            {% block title %}
+                {{ store.name|default:'Aarohi Boutique' }}
+            {% endblock %}
+        </title>
+        <link rel="icon" href="{% static 'images/favicon.svg' %}" type="image/svg+xml">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&display=swap">
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <link rel="stylesheet" href="{% static 'css/motion.css' %}">
+        {% block css %}
+        {% endblock %}
+        <script src="{% static 'js/base.js' %}" defer>
+        </script>
+        <script src="{% static 'js/motion.js' %}" defer>
+        </script>
+        <link rel="stylesheet" href="{% static 'css/design-system.css' %}">
+        <link rel="stylesheet" href="{% static 'css/premium.css' %}">
+        {% block scripts %}
+        {% endblock %}
+    </head>
+    <body>
+        <svg class="icon-sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <symbol id="icon-heart" viewBox="0 0 24 24">
+                <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/>
+            </symbol>
+            <symbol id="icon-user" viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 22v-3a8 8 0 0 1 16 0v3"/>
+            </symbol>
+            <symbol id="icon-bag" viewBox="0 0 24 24">
+                <path d="M5 7h14l1 14H4L5 7Z"/>
+                <path d="M8 8V6a4 4 0 0 1 8 0v2"/>
+            </symbol>
+        </svg>
+        <div id="scroll-progress" aria-hidden="true">
+        </div>
+        <a class="skip-link" href="#main-content">
+            Skip to content
+        </a>
+        <div class="announcement">
+            <span class="ann-glitter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="ann-text"><b aria-hidden="true">✦</b> {{ store.announcement }} <b aria-hidden="true">✦</b></span>
+        </div>
+        <header class="site-header">
+            <div class="header-inner">
+                <a class="brand" href="{% url 'home' %}">
+                    <span class="brand-symbol">
+                        ✧
+                    </span>
+                    {{ store.name|default:'Aarohi Boutique' }}
+                    <small>
+                        WOMEN’S WEAR, BEAUTIFULLY CURATED
+                    </small>
+                </a>
+                <button class="menu-toggle secondary" type="button" aria-expanded="false" aria-controls="primary-nav">
+                    ☰ Menu
+                </button>
+                <nav id="primary-nav" aria-label="Main navigation">
+                    <a href="{% url 'home' %}"{% if nav_active == "home" %} class="is-active" aria-current="page"{% endif %}>
+                        Home
+                    </a>
+                    <details class="mega-menu{% if nav_active == 'collections' %} is-active{% endif %}">
+                        <summary>
+                            Collections
+                        </summary>
+                        <div class="mega-content">
+                            <a href="{% url 'shop' %}">
+                                <strong>
+                                    Shop all collections
+                                </strong>
+                            </a>
+                            {% for category in nav_categories %}
+                                <a href="{% url 'shop' %}?category={{ category.slug }}">
+                                    {{ category.name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </details>
+                    <a href="{% url 'shop' %}?sort=new"{% if nav_active == "new" %} class="is-active" aria-current="page"{% endif %}>
+                        New arrivals
+                    </a>
+                    <a href="{% url 'shop' %}?occasion=Festive"{% if nav_active == "festive" %} class="is-active" aria-current="page"{% endif %}>
+                        Festive edit
+                    </a>
+                    <a href="{% url 'information' 'about' %}"{% if nav_active == "story" %} class="is-active" aria-current="page"{% endif %}>
+                        Our story
+                    </a>
+                    <a href="{% url 'agent_hub' %}"{% if nav_active == "studio" %} class="is-active" aria-current="page"{% endif %}>
+                        Style studio
+                    </a>
+                </nav>
+                <div class="header-actions">
+                    {% if user.is_staff %}<a class="assistant-nav pending-nav{% if nav_active == 'tasks' %} is-active{% endif %}" href="{% url 'pending_board' %}" title="Pending work">✧ Tasks</a>{% endif %}
+                    <a class="assistant-nav{% if nav_active == 'assistant' %} is-active{% endif %}" href="{% url 'assistant' %}">
+                        ✧ AI Stylist
+                    </a>
+                    <a href="{% url 'wishlist' %}" aria-label="Wishlist" class="icon-link{% if nav_active == 'wishlist' %} is-active{% endif %}">
+                        <svg class="icon" aria-hidden="true">
+                            <use href="#icon-heart">
+                            </use>
+                        </svg>
+                    </a>
+                    <a href="{% url 'account' %}" aria-label="My account" class="account-chip icon-link{% if nav_active == 'account' %} is-active{% endif %}">
+                        <svg class="icon" aria-hidden="true">
+                            <use href="#icon-user">
+                            </use>
+                        </svg>
+                        {% if user.is_authenticated %}
+                            <span class="account-name"><small>Hi,</small> {{ user.first_name|default:user.username|truncatechars:14 }}</span>
+                        {% else %}
+                            <span class="account-name">Sign in</span>
+                        {% endif %}
+                    </a>
+                    <a class="bag-link{% if nav_active == 'cart' %} is-active{% endif %}" href="{% url 'cart' %}">
+                        <svg class="icon" aria-hidden="true">
+                            <use href="#icon-bag">
+                            </use>
+                        </svg>
+                        <span class="bag-word">
+                            Bag
+                        </span>
+                        <span>
+                            {{ bag_count }}
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </header>
+        <div class="search-strip">
+            <form action="{% url 'shop' %}" method="get" role="search">
+                <label class="sr-only" for="global-search">
+                    Search products
+                </label>
+                <input id="global-search" name="q" placeholder="Search sarees, kurta sets, dresses and more…" value="{{ request.GET.q }}">
+                <button type="submit" class="secondary">
+                    Search
+                </button>
+            </form>
+        </div>
+        {% if messages %}
+            <div class="messages container" aria-live="polite">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <main id="main-content">
+            {% block content %}
+            {% endblock %}
+        </main>
+        <section class="trust-strip">
+            <div>
+                <strong>
+                    Thoughtfully curated
+                </strong>
+                <span>
+                    Styles for every version of you
+                </span>
+            </div>
+            <div>
+                <strong>
+                    Secure checkout
+                </strong>
+                <span>
+                    Pay through a trusted gateway
+                </span>
+            </div>
+            <div>
+                <strong>
+                    Here to help
+                </strong>
+                <span>
+                    Personal support, always
+                </span>
+            </div>
+        </section>
+        <footer class="site-footer af">
+            <!-- Trust strip -->
+            <div class="af-trust">
+                <div class="af-wrap af-trust-grid">
+                    <div class="af-trust-item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></svg>
+                        <div><strong>Free shipping</strong><span>On orders over ₹{{ store.free_shipping_over|floatformat:0 }}</span></div>
+                    </div>
+                    <div class="af-trust-item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/></svg>
+                        <div><strong>Easy returns</strong><span>{{ store.return_days }}-day returns &amp; exchanges</span></div>
+                    </div>
+                    <div class="af-trust-item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                        <div><strong>Secure payments</strong><span>UPI, cards &amp; netbanking</span></div>
+                    </div>
+                    <div class="af-trust-item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 4.6L18 9.4l-4.2 1.8L12 16l-1.8-4.8L6 9.4l4.2-1.8z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>
+                        <div><strong>AI stylist 24/7</strong><span>Chat, speak &amp; shop</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statement + CTA -->
+            <div class="af-wrap af-hero">
+                <div>
+                    <span class="af-kicker">✦ The Aarohi circle</span>
+                    <h2>Dress for yourself. <em>Beautifully.</em></h2>
+                    <p>New arrivals, festive edits and styling notes — curated with care.</p>
+                </div>
+                <div class="af-hero-cta">
+                    <a class="af-btn" href="{% url 'shop' %}">Find your next favourite ↗</a>
+                    <a class="af-btn af-btn-ghost" href="{% url 'assistant' %}">✧ Ask the AI stylist</a>
+                </div>
+            </div>
+
+            <!-- Main columns -->
+            <div class="af-wrap af-grid">
+                <div class="af-brand">
+                    <a class="af-logo" href="{% url 'home' %}"><span>✧</span> {{ store.name|default:"Aarohi Boutique" }}</a>
+                    <p class="af-tagline">{{ store.tagline }}</p>
+                    {% if store.address %}<p class="af-address">{{ store.address|linebreaksbr }}</p>{% endif %}
+                    <p class="af-follow">Follow us</p>
+                    <ul class="af-social" aria-label="Social media">
+                        <li><a href="{{ store.instagram_url|default:"https://www.instagram.com/" }}" target="_blank" rel="noopener" aria-label="Instagram" class="s-ig">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" class="fill"/></svg></a></li>
+                        <li><a href="{{ store.facebook_url|default:"https://www.facebook.com/" }}" target="_blank" rel="noopener" aria-label="Facebook" class="s-fb">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 8H17V4.5h-2.8C11.5 4.5 10 6.2 10 8.8V11H7.5v3.5H10V21h3.6v-6.5h2.9l.5-3.5h-3.4V9.2c0-.8.4-1.2.9-1.2z" class="fill"/></svg></a></li>
+                        <li><a href="{{ store.youtube_url|default:"https://www.youtube.com/" }}" target="_blank" rel="noopener" aria-label="YouTube" class="s-yt">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9.2v5.6l4.8-2.8z" class="fill"/></svg></a></li>
+                        <li><a href="{{ store.pinterest_url|default:"https://www.pinterest.com/" }}" target="_blank" rel="noopener" aria-label="Pinterest" class="s-pin">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10.6 20.5l1.6-7.2M11 7.5h2.2a2.9 2.9 0 0 1 0 5.8H11.6"/></svg></a></li>
+                        <li><a href="{{ store.x_url|default:"https://x.com/" }}" target="_blank" rel="noopener" aria-label="X (Twitter)" class="s-x">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5h3.6l10.4 15h-3.6zM18.6 4.5L13.4 10.3M5.4 19.5l5.4-6"/></svg></a></li>
+                        <li><a href="{{ store.linkedin_url|default:"https://www.linkedin.com/" }}" target="_blank" rel="noopener" aria-label="LinkedIn" class="s-in">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V17M8 7.3v.2M11.5 17v-6.5M11.5 13c0-1.6 1-2.6 2.4-2.6s2.1 1 2.1 2.6V17"/></svg></a></li>
+                        {% if store.whatsapp %}<li><a href="https://wa.me/{{ store.whatsapp }}" target="_blank" rel="noopener" aria-label="WhatsApp" class="s-wa">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9.2 8.6c.3 2.6 2.5 4.9 5.2 5.4l1-1.1 1.6.8-.4 1.4c-3.6.2-7.3-3.4-7.3-7l1.4-.4.8 1.6z" class="fill"/></svg></a></li>{% endif %}
+                        <li><a href="mailto:{{ store.email }}" aria-label="Email" class="s-mail">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></svg></a></li>
+                    </ul>
+                </div>
+
+                <nav class="af-col" aria-label="Shop">
+                    <h3>Shop</h3>
+                    <a href="{% url 'shop' %}">All collections</a>
+                    <a href="{% url 'shop' %}?sort=new">New arrivals</a>
+                    <a href="{% url 'shop' %}?occasion=Festive">Festive edit</a>
+                    {% for category in nav_categories|slice:":3" %}
+                        <a href="{% url 'shop' %}?category={{ category.slug }}">{{ category.name }}</a>
+                    {% endfor %}
+                </nav>
+
+                <nav class="af-col" aria-label="Customer care">
+                    <h3>Customer care</h3>
+                    <a href="{% url 'account' %}">My orders &amp; tracking</a>
+                    <a href="{% url 'information' 'shipping' %}">Shipping</a>
+                    <a href="{% url 'information' 'returns' %}">Returns &amp; exchanges</a>
+                    <a href="{% url 'information' 'faq' %}">FAQs</a>
+                    <a href="{% url 'contact' %}">Contact us</a>
+                </nav>
+
+                <div class="af-col af-contact">
+                    <h3>Get in touch</h3>
+                    <a href="mailto:{{ store.email }}"><span class="af-ic">✉</span>{{ store.email }}</a>
+                    {% if store.phone %}<a href="tel:{{ store.phone|cut:" " }}"><span class="af-ic">☏</span>{{ store.phone }}</a>{% endif %}
+                    {% if store.whatsapp %}<a href="https://wa.me/{{ store.whatsapp }}" target="_blank" rel="noopener"><span class="af-ic">✆</span>WhatsApp us</a>{% endif %}
+                    <p><span class="af-ic">◷</span>Mon – Sat, 10 AM – 8 PM</p>
+                    <div class="af-pay" aria-label="Payment methods">
+                        <span>UPI</span><span>Visa</span><span>Mastercard</span><span>RuPay</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom bar -->
+            <div class="af-bottom">
+                <div class="af-wrap af-bottom-row">
+                    <span>© {% now "Y" %} {{ store.name|default:"Aarohi Boutique" }}. All rights reserved.</span>
+                    <nav aria-label="Legal">
+                        <a href="{% url 'information' 'privacy' %}">Privacy policy</a>
+                        <a href="{% url 'information' 'terms' %}">Terms</a>
+                        <a href="{% url 'information' 'shipping' %}">Shipping policy</a>
+                    </nav>
+                    <span>Made with <b>♥</b> in India</span>
+                </div>
+            </div>
+        </footer>
+        <button id="back-to-top" type="button" aria-label="Back to top" hidden>
+            ↑
+        </button>
+        <dialog id="quick-view-dialog" aria-labelledby="quick-view-title">
+            <button id="quick-view-close" type="button" class="secondary" aria-label="Close quick view">
+                ✕
+            </button>
+            <div id="quick-view-content">
+            </div>
+        </dialog>
+        {% if True %}
+        <div class="aarohi-ai-shell" id="aarohi-ai-shell">
+          <button type="button" class="aarohi-ai-launch" id="aarohi-ai-launch" aria-expanded="false" aria-controls="aarohi-ai-panel" data-assistant-url="{% url 'assistant' %}">✧ <span>Ask Aarohi AI</span></button>
+          <section class="aarohi-ai-panel" id="aarohi-ai-panel" aria-label="Aarohi shopping assistant" hidden>
+            <header class="aarohi-ai-top"><div><strong>✧ Aarohi AI</strong><small>Chat · Speak · Shop</small></div><button type="button" id="aarohi-ai-close" aria-label="Close assistant">✕</button></header>
+            <div class="aarohi-ai-body">
+              <fieldset class="aarohi-ai-agents">
+                <legend>Choose an assistant</legend>
+                <div class="aarohi-ai-agent-grid">
+                  <label><input type="radio" name="aarohi-agent" value="auto" checked><span>Smart Assistant (Auto)</span></label>
+                  <label><input type="radio" name="aarohi-agent" value="stylist"><span>Shopping &amp; Styling</span></label>
+                  <label><input type="radio" name="aarohi-agent" value="cart"><span>Cart &amp; Checkout</span></label>
+                  <label><input type="radio" name="aarohi-agent" value="support"><span>Order &amp; Customer Support</span></label>
+                  <label><input type="radio" name="aarohi-agent" value="payments"><span>Payment Assistance</span></label>
+                  <label><input type="radio" name="aarohi-agent" value="returns"><span>Returns &amp; Exchange</span></label>
+                  <label><input type="radio" name="aarohi-agent" value="voice"><span>Voice Shopping</span></label>
+                  {% if user.is_staff %}<label><input type="radio" name="aarohi-agent" value="pending"><span>Admin: Pending Work</span></label>{% endif %}
+                </div>
+              </fieldset>
+              <div class="aarohi-ai-messages" id="aarohi-ai-messages" role="log" aria-live="polite"><div class="aarohi-ai-bubble">Welcome to Aarohi Boutique! Tell me what you're shopping for, or ask about your orders.</div></div>
+              <form id="aarohi-ai-form" class="aarohi-ai-form" method="post" action="{% url 'assistant_chat' %}" data-login-url="{% url 'login' %}">
+                {% csrf_token %}
+                <label class="sr-only" for="aarohi-ai-input">Your message</label>
+                <textarea id="aarohi-ai-input" rows="2" maxlength="1200" placeholder="Type or speak your request..."></textarea>
+                <div class="aarohi-ai-controls"><select id="aarohi-ai-language" aria-label="Voice language"><option value="en-IN">English</option><option value="ta-IN">Tamil</option><option value="tanglish">Tanglish</option></select><button type="button" id="aarohi-ai-mic" title="Speak">🎤</button><button type="submit" id="aarohi-ai-send">Send ↗</button></div>
+              </form>
+              <div id="aarohi-ai-status" role="status" class="aarohi-ai-status"></div>
+            </div>
+          </section>
+        </div>
+        <link rel="stylesheet" href="{% static 'css/ai_widget.css' %}?v=4">
+        <script src="{% static 'js/ai_widget.js' %}?v=7" defer></script>
+        {% endif %}
+        <link rel="stylesheet" href="{% static 'css/theme-purple.css' %}?v=19">
+        <link rel="stylesheet" href="{% static 'css/footer-v2.css' %}?v=1">
+        <link rel="stylesheet" href="{% static 'css/scroll-fx.css' %}?v=2">
+        <script src="{% static 'js/scroll-fx.js' %}?v=2" defer></script>
+    </body>
+</html>

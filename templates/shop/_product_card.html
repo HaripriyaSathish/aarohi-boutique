@@ -1,0 +1,58 @@
+{% load static %}
+<article class="product-card">
+    <div class="product-visual">
+        <a class="product-photo" href="{% url 'product' product.slug %}">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy">
+            {% else %}
+                <img src="{% static 'images/placeholder.svg' %}" alt="Product image coming soon" loading="lazy">
+            {% endif %}
+        </a>
+        {% if product.featured %}
+            <span class="pill">
+                THE CURATED EDIT
+            </span>
+        {% endif %}
+        <form method="post" action="{% url 'wishlist_toggle' product.pk %}" class="card-wishlist">
+            {% csrf_token %}
+            <button class="heart" aria-label="Toggle {{ product.name }} in wishlist">
+                <svg class="icon" aria-hidden="true">
+                    <use href="#icon-heart">
+                    </use>
+                </svg>
+            </button>
+        </form>
+        <button type="button" class="quick-view-button" data-product-slug="{{ product.slug }}">
+            A closer look
+            <span>
+                ↗
+            </span>
+        </button>
+    </div>
+    <div class="product-copy">
+        <span class="eyebrow">
+            {{ product.category.name }}
+        </span>
+        <a href="{% url 'product' product.slug %}">
+            <h3>
+                {{ product.name }}
+            </h3>
+        </a>
+        <div class="product-price-row">
+            <p class="price">
+                ₹{{ product.price }}
+                {% if product.original_price %}
+                    <del>
+                        ₹{{ product.original_price }}
+                    </del>
+                {% endif %}
+            </p>
+            <a href="{% url 'product' product.slug %}" class="product-arrow" aria-label="View {{ product.name }}">
+                ↗
+            </a>
+        </div>
+        <span class="product-fabric">
+            {{ product.fabric }} · {{ product.occasion }}
+        </span>
+    </div>
+</article>

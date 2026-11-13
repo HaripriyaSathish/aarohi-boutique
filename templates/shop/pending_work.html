@@ -1,0 +1,92 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}Pending Work | Aarohi Admin{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/pending_work.css' %}?v=1">
+{% endblock %}
+{% block content %}
+<section class="container section pw-page">
+    <header class="pw-head">
+        <div>
+            <span class="eyebrow">Admin · Pending-Work Agent</span>
+            <h1>What needs your attention</h1>
+            <p class="pw-sub">Live scan of orders, returns, stock, automation and customer queues. Updated {% now "H:i" %}.</p>
+        </div>
+        <div class="pw-head-actions">
+            <a class="button secondary" href="{% url 'operations' %}">Operations centre</a>
+            <a class="button secondary" href="{% url 'admin:index' %}">Django admin</a>
+            <a class="button" href="{% url 'assistant' %}?agent=pending">Ask the agent ↗</a>
+        </div>
+    </header>
+
+    <div class="pw-stats">
+        <div class="pw-stat"><span>Items waiting</span><strong>{{ data.total_items }}</strong></div>
+        <div class="pw-stat pw-stat-high"><span>High-priority queues</span><strong>{{ data.high }}</strong></div>
+        <div class="pw-stat"><span>Queues open</span><strong>{{ data.queues|length }}</strong></div>
+        <div class="pw-stat"><span>Paid today</span><strong>{{ data.today.paid_orders }} · ₹{{ data.today.revenue_inr }}</strong></div>
+    </div>
+
+    <article class="pw-briefing" id="pw-briefing" data-url="{% url 'pending_briefing' %}">
+        <div class="pw-briefing-top">
+            <h2>✧ AI briefing</h2>
+            <small id="pw-engine">Preparing…</small>
+        </div>
+        <div id="pw-briefing-text" class="pw-briefing-text">
+            <span class="pw-skeleton"></span><span class="pw-skeleton"></span><span class="pw-skeleton short"></span>
+        </div>
+        <button type="button" class="secondary" id="pw-refresh">Refresh briefing</button>
+    </article>
+
+    {% if data.queues %}
+    <div class="pw-grid">
+        {% for q in data.queues %}
+        <a class="pw-card pw-{{ q.priority }}" href="{{ q.url }}" style="--i: {{ forloop.counter0 }}">
+            <div class="pw-card-top">
+                <span class="pw-badge">{{ q.priority }}</span>
+                <strong class="pw-count">{{ q.count }}</strong>
+            </div>
+            <h3>{{ q.title }}</h3>
+            <p class="pw-action">{{ q.action }}</p>
+            {% if q.examples %}
+            <ul>
+                {% for ex in q.examples %}<li>{{ ex }}</li>{% endfor %}
+                {% if q.count > 5 %}<li class="pw-more">+ {{ q.count|add:"-5" }} more</li>{% endif %}
+            </ul>
+            {% endif %}
+            <span class="pw-open">Open queue →</span>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="pw-empty">
+        <strong>All clear ✨</strong>
+        <p>Nothing is waiting for staff right now.</p>
+    </div>
+    {% endif %}
+</section>
+<script>
+(() => {
+    const box = document.getElementById('pw-briefing');
+    const text = document.getElementById('pw-briefing-text');
+    const engine = document.getElementById('pw-engine');
+    const btn = document.getElementById('pw-refresh');
+    async function load() {
+        btn.disabled = true;
+        engine.textContent = 'Preparing…';
+        try {
+            const r = await fetch(box.dataset.url, {credentials: 'same-origin'});
+            const d = await r.json();
+            text.textContent = d.briefing;
+            engine.textContent = d.engine;
+        } catch (e) {
+            text.textContent = 'Briefing could not be loaded. The queues below are still accurate.';
+            engine.textContent = 'Error';
+        } finally {
+            btn.disabled = false;
+        }
+    }
+    btn.addEventListener('click', load);
+    load();
+})();
+</script>
+{% endblock %}

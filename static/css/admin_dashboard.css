@@ -1,0 +1,40 @@
+:root {
+    --primary: #76549b;
+    --secondary: #52366e;
+    --accent: #eee1fa;
+    --link-fg: #76549b;
+    --header-bg: #52366e;
+}
+
+.boutique-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.boutique-metrics a {
+    display: block;
+    padding: 22px;
+    background: #f3edf9;
+    border: 1px solid #ded0eb;
+    border-radius: 12px;
+    color: #52366e;
+}
+
+.boutique-metrics span {
+    display: block;
+    font-size: 12px;
+}
+
+.boutique-metrics strong {
+    display: block;
+    margin-top: 12px;
+    font-size: 24px;
+}
+
+@media (max-width: 800px) {
+    .boutique-metrics {
+        grid-template-columns: 1fr 1fr;
+    }
+}

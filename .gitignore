@@ -1,0 +1,10 @@
+*.json.bak
+*.pyc
+.admin_setup_done
+.env
+.venv/
+LOCAL_TEST_LOGINS.txt
+__pycache__/
+db.sqlite3
+private_media/
+staticfiles/

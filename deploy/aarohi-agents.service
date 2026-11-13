@@ -1,0 +1,14 @@
+[Unit]
+Description=Aarohi commerce automation worker
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/aarohi_boutique
+ExecStart=/var/www/aarohi_boutique/.venv/bin/python manage.py run_agents --watch --interval 5
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

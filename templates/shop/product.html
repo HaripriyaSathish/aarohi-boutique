@@ -1,0 +1,200 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    {{ product.seo_title|default:product.name }} | Aarohi Boutique
+{% endblock %}
+{% block meta_description %}
+    {{ product.meta_description|default:product.description|truncatechars:160 }}
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/product.css' %}">
+{% endblock %}
+{% block scripts %}
+    <script src="{% static 'js/product.js' %}" defer>
+    </script>
+{% endblock %}
+{% block content %}
+    <div class="container contextual-agent">
+        <a href="{% url 'assistant' %}?agent=stylist">
+            ✧ Ask the styling agent about this product →
+        </a>
+    </div>
+    <div class="container section">
+        <div class="breadcrumb">
+            <a href="{% url 'shop' %}">
+                Collections
+            </a>
+            / {{ product.category.name }} / {{ product.name }}
+        </div>
+        <div class="product-layout">
+            <section class="gallery">
+                <div class="main-image">
+                    {% if product.image %}
+                        <img id="main-product-image" src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="{% static 'images/placeholder.svg' %}" alt="Image coming soon">
+                    {% endif %}
+                </div>
+                <div class="thumbnails">
+                    {% if product.image %}
+                        <button type="button" class="image-thumb" data-image="{{ product.image.url }}" aria-label="Main image">
+                            <img src="{{ product.image.url }}" alt="Main view">
+                        </button>
+                    {% endif %}
+                    {% for photo in product.gallery.all %}
+                        <button type="button" class="image-thumb" data-image="{{ photo.image.url }}" aria-label="{{ photo.alt|default:'Alternate view' }}">
+                            <img src="{{ photo.image.url }}" alt="{{ photo.alt }}">
+                        </button>
+                    {% endfor %}
+                </div>
+            </section>
+            <section class="product-details">
+                <span class="eyebrow">
+                    {{ product.category.name }} · {{ product.fabric }}
+                </span>
+                <h1>
+                    {{ product.name }}
+                </h1>
+                <p>
+                    ★ {{ rating|default:'New' }}
+                    <span class="muted">
+                        ({{ product.reviews.count }} reviews)
+                    </span>
+                </p>
+                <p class="detail-price">
+                    ₹{{ product.price }}
+                    {% if product.original_price %}
+                        <del>
+                            ₹{{ product.original_price }}
+                        </del>
+                    {% endif %}
+                </p>
+                <p class="muted">
+                    Inclusive of applicable taxes
+                </p>
+                <p>
+                    {{ product.description }}
+                </p>
+                <form method="post" action="{% url 'add_product' %}" class="buy-form">
+                    {% csrf_token %}
+                    <fieldset class="variant-fieldset">
+                        <legend>
+                            Choose your size & colour
+                        </legend>
+                        <div class="variant-grid">
+                            {% for variant in variants %}
+                                <label class="variant-choice">
+                                    <input type="radio" name="variant" value="{{ variant.pk }}" data-stock="{{ variant.stock }}" required {% if not variant.stock %}disabled{% endif %}>
+                                    <span>
+                                        <strong>
+                                            {{ variant.size }}
+                                        </strong>
+                                        <small>
+                                            {{ variant.colour }}
+                                        </small>
+                                        {% if not variant.stock %}
+                                            <small>
+                                                Sold out
+                                            </small>
+                                        {% endif %}
+                                    </span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </fieldset>
+                    <label>
+                        Quantity
+                        <input type="number" name="quantity" min="1" max="10" value="1" required>
+                    </label>
+                    <button>
+                        Add to bag →
+                    </button>
+                    <button name="buy_now" value="1" class="secondary">
+                        Buy now →
+                    </button>
+                </form>
+                <form method="post" action="{% url 'wishlist_toggle' product.pk %}">
+                    {% csrf_token %}
+                    <button class="secondary full-width">
+                        ♡ Save to wishlist
+                    </button>
+                </form>
+                <details>
+                    <summary>
+                        Size guide
+                    </summary>
+                    <p>
+                        General size guide, body bust in inches: XS 32 · S 34 · M 36 · L 38 · XL 40 · XXL 42. Fit varies by garment; contact us for exact measurements. Free size is listed where applicable.
+                    </p>
+                </details>
+                <details open>
+                    <summary>
+                        Product details & care
+                    </summary>
+                    <p>
+                        Fabric: {{ product.fabric }}. Occasion: {{ product.occasion }}.
+                    </p>
+                    <p>
+                        {{ product.care }}
+                    </p>
+                </details>
+                <div class="delivery-box">
+                    <label for="delivery-pin">
+                        Delivery estimate
+                    </label>
+                    <div class="inline-form">
+                        <input id="delivery-pin" maxlength="6" inputmode="numeric" placeholder="Enter Indian PIN">
+                        <button id="check-delivery" class="secondary" type="button">
+                            Check
+                        </button>
+                    </div>
+                    <p id="delivery-result" aria-live="polite">
+                    </p>
+                </div>
+            </section>
+        </div>
+        <section class="reviews section">
+            <h2>
+                Customer stories
+            </h2>
+            {% for review in product.reviews.all %}
+                <article class="panel">
+                    <strong>
+                        {{ review.user.first_name|default:review.user.username }} · {{ review.rating }}/5
+                    </strong>
+                    <p>
+                        {{ review.text }}
+                    </p>
+                </article>
+            {% empty %}
+                <p>
+                    Be the first to share your experience after delivery.
+                </p>
+            {% endfor %}
+            {% if user.is_authenticated %}
+                <details>
+                    <summary>
+                        Write or update your review
+                    </summary>
+                    <form action="{% url 'review' product.pk %}" method="post">
+                        {% csrf_token %}
+                        {{ review_form.as_p }}
+                        <button>
+                            Submit review
+                        </button>
+                    </form>
+                </details>
+            {% endif %}
+        </section>
+        <section class="section">
+            <h2>
+                You may also love
+            </h2>
+            <div class="product-grid">
+                {% for product in related %}
+                    {% include "shop/_product_card.html" %}
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+{% endblock %}

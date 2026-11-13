@@ -1,0 +1,32 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Returns | Aarohi Boutique
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/returns.css' %}">
+{% endblock %}
+{% block content %}
+    <section class="container section narrow">
+        <span class="eyebrow">
+            AAROHI BOUTIQUE
+        </span>
+        <h1>
+            Returns & exchanges
+        </h1>
+        <article class="panel prose">
+            <h2>
+                Need a different fit?
+            </h2>
+            <p>
+                Request a return or size exchange from a delivered order within the store’s return window (default 7 days). Keep items unused with original tags. Approval, pickup and inspection are handled by the store.
+            </p>
+            <h2>
+                Refunds
+            </h2>
+            <p>
+                Cancellation is available before packing. Paid cancellations require refund processing. After inspection, refunds are sent to the original payment method. Processing times depend on the bank. Individual order-line refunds are supported. After delivery, the original shipping fee is non-refundable. Each request covers all units of its selected order line.
+            </p>
+        </article>
+    </section>
+{% endblock %}

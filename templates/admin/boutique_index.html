@@ -1,0 +1,58 @@
+{% extends "admin/index.html" %}
+{% load static %}
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+{% endblock %}
+{% block content %}
+    <p>
+        <a href="{% url 'pending_board' %}" style="display:inline-block;padding:12px 20px;border-radius:12px;background:linear-gradient(120deg,#3b1f4f,#653a88);color:#fff;font-weight:600;font-size:15px;">
+            ✧ Pending work — what needs attention today →
+        </a>
+    </p>
+    <p>
+        <a href="{% url 'operations' %}">
+            Open Agent Operations Centre →
+        </a>
+    </p>
+    <p>
+        <a href="{% url 'assistant' %}?agent=admin">
+            ✧ Open AI Admin Insights →
+        </a>
+    </p>
+    <div class="boutique-metrics">
+        <a href="{% url 'admin:shop_order_changelist' %}">
+            <span>
+                Verified sales
+            </span>
+            <strong>
+                ₹{{ dashboard_sales }}
+            </strong>
+        </a>
+        <a href="{% url 'admin:shop_order_changelist' %}">
+            <span>
+                Total orders
+            </span>
+            <strong>
+                {{ dashboard_orders }}
+            </strong>
+        </a>
+        <a href="{% url 'admin:shop_product_changelist' %}">
+            <span>
+                Active products
+            </span>
+            <strong>
+                {{ dashboard_products }}
+            </strong>
+        </a>
+        <a href="{% url 'admin:shop_variant_changelist' %}">
+            <span>
+                Low-stock variants
+            </span>
+            <strong>
+                {{ dashboard_low_stock }}
+            </strong>
+        </a>
+    </div>
+    {{ block.super }}
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block title %}
+    Faq | Aarohi Boutique
+{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/faq.css' %}">
+{% endblock %}
+{% block content %}
+    <section class="container section narrow">
+        <span class="eyebrow">
+            AAROHI BOUTIQUE
+        </span>
+        <h1>
+            Frequently asked questions
+        </h1>
+        <article class="panel prose">
+            <details open>
+                <summary>
+                    How do I choose the right size?
+                </summary>
+                <p>
+                    Use the guide on the product page. For exact garment measurements, contact the store before ordering.
+                </p>
+            </details>
+            <details>
+                <summary>
+                    Which payment methods are available?
+                </summary>
+                <p>
+                    Live checkout uses Razorpay. Enabled methods depend on the store’s gateway configuration. Local demo checkout does not collect money.
+                </p>
+            </details>
+            <details>
+                <summary>
+                    How do I track an order?
+                </summary>
+                <p>
+                    Open My Account, choose an order and view tracking events. Courier tracking appears after dispatch.
+                </p>
+            </details>
+            <details>
+                <summary>
+                    Can I cancel or exchange?
+                </summary>
+                <p>
+                    Cancellation is allowed before packing. Eligible delivered items support return or size-exchange requests.
+                </p>
+            </details>
+        </article>
+    </section>
+{% endblock %}
