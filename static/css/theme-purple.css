@@ -693,3 +693,94 @@ html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; heig
 .aarohi-ai-swatches { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 .aarohi-ai-swatch { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid #fff; box-shadow: 0 0 0 1px var(--p-300); flex: 0 0 14px; }
 .aarohi-ai-swatches small, .aarohi-ai-sizes { font-size: 12px !important; color: var(--muted); line-height: 1.3; margin-left: 2px; }
+
+/* ==========================================================================
+   v21: Navbar fits every laptop width — bag icon never pushed off-screen
+   ========================================================================== */
+.header-inner { box-sizing: border-box; width: 100%; }
+.header-actions { min-width: 0; }
+.header-actions .bag-link { flex-shrink: 0; }
+
+@media (max-width: 1600px) and (min-width: 1181px) {
+    .header-inner { padding-left: 28px !important; padding-right: 28px !important; gap: 18px !important; }
+    .brand { font-size: 30px !important; }
+    .brand small { font-size: 10px !important; letter-spacing: 2.5px !important; }
+    #primary-nav { gap: 20px !important; }
+    #primary-nav > a, #primary-nav summary { font-size: 16px !important; }
+    .header-actions { gap: 10px !important; }
+    .header-actions .assistant-nav { font-size: 14.5px !important; padding: 8px 14px !important; }
+    .account-chip { padding: 5px 12px 5px 7px !important; }
+}
+
+@media (max-width: 1440px) and (min-width: 1181px) {
+    .brand small { display: none !important; }
+    .brand { font-size: 28px !important; }
+    #primary-nav { gap: 16px !important; }
+    #primary-nav > a, #primary-nav summary { font-size: 15px !important; }
+    .account-name small { display: none; }
+    .bag-word { display: none !important; }
+}
+
+@media (max-width: 1320px) and (min-width: 1181px) {
+    .header-inner { padding-left: 20px !important; padding-right: 20px !important; gap: 14px !important; }
+    .brand { font-size: 25px !important; }
+    #primary-nav { gap: 13px !important; }
+    #primary-nav > a, #primary-nav summary { font-size: 14.5px !important; }
+    .header-actions { gap: 8px !important; }
+    .header-actions .assistant-nav { font-size: 13.5px !important; padding: 7px 11px !important; }
+    .account-name { display: none !important; }
+    .account-chip { padding: 6px !important; }
+}
+
+/* ==========================================================================
+   v22: Aarohi AI panel — collapsible assistant picker, roomier chat
+   ========================================================================== */
+.aarohi-ai-panel {
+    width: min(680px, calc(100vw - 36px)) !important;
+    /* Sit just above the launcher whatever its height, leaving room at the top */
+    bottom: calc(100% + 12px) !important;
+    height: min(900px, calc(100dvh - 130px)) !important;
+}
+.aarohi-ai-agents { padding: 4px 10px 10px !important; transition: padding .25s var(--ease); }
+.aarohi-ai-agents legend { padding: 0 !important; width: auto; }
+.aarohi-ai-agents-toggle {
+    display: inline-flex; align-items: center; gap: 8px; max-width: 100%;
+    border: 0; background: #fff; padding: 2px 6px; margin: 0; cursor: pointer;
+    font: inherit; font-size: 15px; font-weight: 700; color: var(--p-800);
+    border-radius: 8px;
+}
+.aarohi-ai-agents-toggle:focus-visible { outline: 2px solid var(--p-500); outline-offset: 2px; }
+.aarohi-ai-agents-current {
+    display: none; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-size: 13px; font-weight: 600; color: #fff; background: var(--grad-royal);
+    padding: 3px 10px; border-radius: 999px;
+}
+.aarohi-ai-agents-chevron {
+    width: 8px; height: 8px; flex: 0 0 8px; margin-left: 2px;
+    border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+    transform: translateY(-2px) rotate(45deg); transition: transform .25s var(--ease);
+}
+/* Collapsed: one compact row showing the active assistant */
+.aarohi-ai-agents.is-collapsed { padding: 0 !important; border-color: transparent !important; background: transparent !important; }
+.aarohi-ai-agents.is-collapsed .aarohi-ai-agents-toggle {
+    border: 1px solid var(--p-200); padding: 6px 10px 6px 12px; box-shadow: var(--shadow-sm);
+}
+.aarohi-ai-agents.is-collapsed .aarohi-ai-agents-toggle:hover { border-color: var(--p-400); }
+.aarohi-ai-agents.is-collapsed .aarohi-ai-agent-grid { display: none; }
+.aarohi-ai-agents.is-collapsed .aarohi-ai-agents-current { display: inline-block; }
+.aarohi-ai-agents.is-collapsed .aarohi-ai-agents-title::after { content: ":"; }
+/* Chevron points up while open, down while collapsed */
+.aarohi-ai-agents:not(.is-collapsed) .aarohi-ai-agents-chevron { transform: translateY(2px) rotate(-135deg); }
+.aarohi-ai-messages { scroll-padding-top: 8px; }
+
+@media (max-width: 600px) {
+    .aarohi-ai-panel { width: 100vw !important; height: 100dvh !important; border-radius: 0 !important; }
+    .aarohi-ai-top { padding: 12px 14px !important; }
+    .aarohi-ai-top strong { font-size: 24px !important; }
+    .aarohi-ai-agent-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .aarohi-ai-agents-toggle { font-size: 14px; }
+}
+@media (max-height: 640px) and (min-width: 601px) {
+    .aarohi-ai-top { padding: 10px 16px !important; }
+    .aarohi-ai-top strong { font-size: 24px !important; }
+}

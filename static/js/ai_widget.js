@@ -30,6 +30,42 @@
         messages.scrollTop = messages.scrollHeight;
     }
 
+    // Scroll so the given element sits at the top of the chat log — used to
+    // show the start of a reply instead of jumping past it to the bottom.
+    function revealFrom(element) {
+        if (!element || !element.isConnected) return;
+        const offset = element.getBoundingClientRect().top - messages.getBoundingClientRect().top;
+        messages.scrollTo({ top: messages.scrollTop + offset - 8, behavior: 'smooth' });
+    }
+
+    // Collapsible "Choose an assistant" picker
+    const agents = panel.querySelector('.aarohi-ai-agents');
+    const agentsToggle = byId('agents-toggle');
+    const agentsCurrent = byId('agents-current');
+
+    function setAgentsOpen(isOpen) {
+        if (!agents || !agentsToggle) return;
+        agents.classList.toggle('is-collapsed', !isOpen);
+        agentsToggle.setAttribute('aria-expanded', String(isOpen));
+    }
+
+    function syncAgentLabel() {
+        const checked = panel.querySelector('input[name=aarohi-agent]:checked');
+        if (agentsCurrent && checked) agentsCurrent.textContent = checked.nextElementSibling.textContent.trim();
+    }
+
+    if (agentsToggle) {
+        agentsToggle.addEventListener('click', () => setAgentsOpen(agents.classList.contains('is-collapsed')));
+        panel.querySelectorAll('input[name=aarohi-agent]').forEach(radio => radio.addEventListener('change', () => {
+            syncAgentLabel();
+            setAgentsOpen(false);
+            input.focus();
+        }));
+        syncAgentLabel();
+        // Start folded so the conversation gets the space; tap the bar to change assistant.
+        setAgentsOpen(false);
+    }
+
     // Minimal, safe markdown: text is HTML-escaped first, then **bold** and
     // "- " / "* " bullet lines are turned into markup.
     function renderMarkdown(text) {
@@ -124,7 +160,9 @@
         if (!message || send.disabled) return;
         input.value = '';
         send.disabled = true;
+        setAgentsOpen(false);
         bubble(message, true);
+        const question = messages.lastElementChild;
         status.textContent = 'Aarohi AI is working…';
         const typing = document.createElement('div');
         typing.className = 'aarohi-ai-bubble aarohi-ai-typing';
@@ -283,6 +321,8 @@
             typing.remove();
             send.disabled = false;
             status.textContent = '';
+            // Show the user's question with the beginning of the reply right under it.
+            requestAnimationFrame(() => revealFrom(question));
         }
     });
 

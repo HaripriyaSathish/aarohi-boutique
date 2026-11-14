@@ -308,9 +308,9 @@
           <section class="aarohi-ai-panel" id="aarohi-ai-panel" aria-label="Aarohi shopping assistant" hidden>
             <header class="aarohi-ai-top"><div><strong>✧ Aarohi AI</strong><small>Chat · Speak · Shop</small></div><button type="button" id="aarohi-ai-close" aria-label="Close assistant">✕</button></header>
             <div class="aarohi-ai-body">
-              <fieldset class="aarohi-ai-agents">
-                <legend>Choose an assistant</legend>
-                <div class="aarohi-ai-agent-grid">
+              <fieldset class="aarohi-ai-agents is-collapsed">
+                <legend><button type="button" class="aarohi-ai-agents-toggle" id="aarohi-ai-agents-toggle" aria-expanded="false" aria-controls="aarohi-ai-agent-grid"><span class="aarohi-ai-agents-title">Choose an assistant</span><span class="aarohi-ai-agents-current" id="aarohi-ai-agents-current">Smart Assistant (Auto)</span><span class="aarohi-ai-agents-chevron" aria-hidden="true"></span></button></legend>
+                <div class="aarohi-ai-agent-grid" id="aarohi-ai-agent-grid">
                   <label><input type="radio" name="aarohi-agent" value="auto" checked><span>Smart Assistant (Auto)</span></label>
                   <label><input type="radio" name="aarohi-agent" value="stylist"><span>Shopping &amp; Styling</span></label>
                   <label><input type="radio" name="aarohi-agent" value="cart"><span>Cart &amp; Checkout</span></label>
@@ -332,10 +332,10 @@
             </div>
           </section>
         </div>
-        <link rel="stylesheet" href="{% static 'css/ai_widget.css' %}?v=4">
-        <script src="{% static 'js/ai_widget.js' %}?v=9" defer></script>
+        <link rel="stylesheet" href="{% static 'css/ai_widget.css' %}?v=5">
+        <script src="{% static 'js/ai_widget.js' %}?v=10" defer></script>
         {% endif %}
-        <link rel="stylesheet" href="{% static 'css/theme-purple.css' %}?v=20">
+        <link rel="stylesheet" href="{% static 'css/theme-purple.css' %}?v=24">
         <link rel="stylesheet" href="{% static 'css/footer-v2.css' %}?v=1">
         <link rel="stylesheet" href="{% static 'css/scroll-fx.css' %}?v=2">
         <script src="{% static 'js/scroll-fx.js' %}?v=2" defer></script>
