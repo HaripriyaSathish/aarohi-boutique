@@ -784,3 +784,36 @@ html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; heig
     .aarohi-ai-top { padding: 10px 16px !important; }
     .aarohi-ai-top strong { font-size: 24px !important; }
 }
+
+/* v25: compact chat input — one-line message box that grows, narrow language picker */
+.aarohi-ai-form { padding: 10px 14px 12px !important; }
+.aarohi-ai-form textarea {
+    display: block; min-height: 46px; max-height: 132px; height: 46px;
+    padding: 11px 14px !important; line-height: 1.5 !important;
+    border-radius: 14px !important; overflow-y: auto;
+}
+.aarohi-ai-controls { gap: 8px !important; margin-top: 8px !important; }
+.aarohi-ai-controls select {
+    flex: 0 0 auto !important; width: auto !important; min-width: 0; max-width: 140px;
+    height: 40px; padding: 0 30px 0 12px !important; font-size: 14px; border-radius: 10px !important;
+    margin-right: auto;
+}
+.aarohi-ai-controls #aarohi-ai-mic { width: 40px; height: 40px; padding: 0 !important; flex: 0 0 40px; }
+.aarohi-ai-controls #aarohi-ai-send { height: 40px; padding: 0 18px !important; flex: 0 0 auto; }
+
+/* v26: message box, language, mic and Send on ONE row */
+.aarohi-ai-form { display: flex !important; align-items: flex-end; gap: 8px; }
+.aarohi-ai-form textarea { flex: 1 1 auto; min-width: 0; width: auto !important; }
+.aarohi-ai-controls { flex: 0 0 auto; margin-top: 0 !important; height: 46px; align-items: center; }
+.aarohi-ai-controls select { margin-right: 0 !important; height: 46px; }
+.aarohi-ai-controls #aarohi-ai-mic, .aarohi-ai-controls #aarohi-ai-send { height: 46px; }
+.aarohi-ai-controls #aarohi-ai-mic { width: 46px; flex-basis: 46px; }
+@media (max-width: 600px) {
+    .aarohi-ai-form { gap: 6px; padding: 10px !important; }
+    .aarohi-ai-controls { gap: 6px !important; }
+    .aarohi-ai-controls select { max-width: 92px; padding: 0 22px 0 8px !important; font-size: 13px; }
+    .aarohi-ai-controls #aarohi-ai-mic { width: 42px; flex-basis: 42px; }
+    /* Send becomes an arrow icon on phones to leave room for typing */
+    .aarohi-ai-controls #aarohi-ai-send { width: 46px; padding: 0 !important; font-size: 0 !important; }
+    .aarohi-ai-controls #aarohi-ai-send::after { content: "\27A4"; font-size: 18px; }
+}

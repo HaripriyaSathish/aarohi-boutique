@@ -325,17 +325,17 @@
               <form id="aarohi-ai-form" class="aarohi-ai-form" method="post" action="{% url 'assistant_chat' %}" data-login-url="{% url 'login' %}">
                 {% csrf_token %}
                 <label class="sr-only" for="aarohi-ai-input">Your message</label>
-                <textarea id="aarohi-ai-input" rows="2" maxlength="1200" placeholder="Type or speak your request..."></textarea>
-                <div class="aarohi-ai-controls"><select id="aarohi-ai-language" aria-label="Voice language"><option value="en-IN">English</option><option value="ta-IN">Tamil</option><option value="tanglish">Tanglish</option></select><button type="button" id="aarohi-ai-mic" title="Speak">🎤</button><button type="submit" id="aarohi-ai-send">Send ↗</button></div>
+                <textarea id="aarohi-ai-input" rows="1" maxlength="1200" placeholder="Type or speak your request..."></textarea>
+                <div class="aarohi-ai-controls"><select id="aarohi-ai-language" aria-label="Voice language"><option value="en-IN">English</option><option value="ta-IN">Tamil</option><option value="tanglish">Tanglish</option></select><button type="button" id="aarohi-ai-mic" title="Speak">🎤</button><button type="submit" id="aarohi-ai-send" aria-label="Send">Send ↗</button></div>
               </form>
               <div id="aarohi-ai-status" role="status" class="aarohi-ai-status"></div>
             </div>
           </section>
         </div>
         <link rel="stylesheet" href="{% static 'css/ai_widget.css' %}?v=5">
-        <script src="{% static 'js/ai_widget.js' %}?v=10" defer></script>
+        <script src="{% static 'js/ai_widget.js' %}?v=11" defer></script>
         {% endif %}
-        <link rel="stylesheet" href="{% static 'css/theme-purple.css' %}?v=24">
+        <link rel="stylesheet" href="{% static 'css/theme-purple.css' %}?v=26">
         <link rel="stylesheet" href="{% static 'css/footer-v2.css' %}?v=1">
         <link rel="stylesheet" href="{% static 'css/scroll-fx.css' %}?v=2">
         <script src="{% static 'js/scroll-fx.js' %}?v=2" defer></script>

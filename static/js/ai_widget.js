@@ -38,6 +38,12 @@
         messages.scrollTo({ top: messages.scrollTop + offset - 8, behavior: 'smooth' });
     }
 
+    // Message box starts one line tall and grows with the text (up to the CSS max-height).
+    function fitInput() {
+        input.style.height = 'auto';
+        input.style.height = Math.min(input.scrollHeight + 2, 132) + 'px';
+    }
+    input.addEventListener('input', fitInput);
     // Collapsible "Choose an assistant" picker
     const agents = panel.querySelector('.aarohi-ai-agents');
     const agentsToggle = byId('agents-toggle');
@@ -159,6 +165,7 @@
         const message = input.value.trim();
         if (!message || send.disabled) return;
         input.value = '';
+        fitInput();
         send.disabled = true;
         setAgentsOpen(false);
         bubble(message, true);
@@ -192,7 +199,7 @@
                 bubble('Sign in to shop with Aarohi AI and access your orders.');
                 link(form.dataset.loginUrl + '?next=' + encodeURIComponent(location.pathname + location.search),
                     form.dataset.loginUrl, 'Sign in');
-                input.value = message;
+                input.value = message; fitInput();
                 return;
             }
             if (!response.headers.get('Content-Type')?.includes('application/json')) {
@@ -317,6 +324,7 @@
         } catch (error) {
             bubble(error.message);
             if (!input.value) input.value = message;
+            fitInput();
         } finally {
             typing.remove();
             send.disabled = false;
@@ -338,6 +346,7 @@
         recognition.lang = language.value === 'ta-IN' ? 'ta-IN' : 'en-IN';
         recognition.onresult = event => {
             input.value = event.results[0][0].transcript;
+            fitInput();
             input.focus();
         };
         recognition.onerror = () => {
