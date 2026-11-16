@@ -20,6 +20,11 @@ if not DEBUG and SECRET_KEY in [
 ]:
     raise ImproperlyConfigured("Set SECRET_KEY before production deployment.")
 ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost,testserver").split(",") if h.strip()]
+# Local development: the PC's Wi-Fi IP can change whenever the router reassigns
+# it, so accept any host instead of listing IPs by hand. Never applies when DEBUG
+# is off (production keeps the explicit list above).
+if DEBUG and os.getenv("DEV_ALLOW_ANY_HOST", "true").lower() == "true":
+    ALLOWED_HOSTS.append("*")
 # Render sets RENDER_EXTERNAL_HOSTNAME (e.g. aarohi-boutique.onrender.com) automatically.
 RENDER_EXTERNAL_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:
@@ -35,10 +40,16 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "shop.apps.ShopConfig",
+    # Mobile app REST API (no AI/agent code)
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "corsheaders",
+    "api",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -216,3 +227,29 @@ FASHN_API_KEY = os.getenv("FASHN_API_KEY", "")
 TRYON_MODEL = os.getenv("TRYON_MODEL", "tryon-v1.6")
 DATA_UPLOAD_MAX_MEMORY_SIZE = 8 * 1024 * 1024
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
+
+
+# ---------------------------------------------------------------------------
+# Mobile app REST API (Expo / React Native)
+# ---------------------------------------------------------------------------
+from datetime import timedelta as _td
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
+    "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 20,
+    "DEFAULT_THROTTLE_RATES": {"auth": "10/minute"},
+}
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": _td(hours=int(os.getenv("JWT_ACCESS_HOURS", "12"))),
+    "REFRESH_TOKEN_LIFETIME": _td(days=int(os.getenv("JWT_REFRESH_DAYS", "30"))),
+    "UPDATE_LAST_LOGIN": True,
+}
+# Native apps don't send an Origin header, so CORS only matters for Expo web.
+CORS_URLS_REGEX = r"^/api/.*$"
+CORS_ALLOW_ALL_ORIGINS = DEBUG
+CORS_ALLOWED_ORIGINS = [o.strip() for o in os.getenv("CORS_ALLOWED_ORIGINS", "").split(",") if o.strip()]
